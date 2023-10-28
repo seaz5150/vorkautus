@@ -18,7 +18,8 @@ class _NewWorkoutScreenState
         title: const Text(
           'New workout',
           style: TextStyle(
-            fontWeight: FontWeight.w500
+            fontWeight: FontWeight.w500,
+            fontSize: 25
           )
         ),
     ),

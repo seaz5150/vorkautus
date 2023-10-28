@@ -18,7 +18,8 @@ class _WorkoutHistoryScreenState
         title: const Text(
           'Previous workouts',
           style: TextStyle(
-            fontWeight: FontWeight.w500
+            fontWeight: FontWeight.w500,
+            fontSize: 25
           )
         ),
     ),

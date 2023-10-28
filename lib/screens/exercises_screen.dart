@@ -9,7 +9,7 @@ class ExercisesScreen extends StatefulWidget {
 }
 
 class _ExercisesScreenState extends State<ExercisesScreen> {
-  final List<String> demoExcercises = <String>['Exercise 1', 'Exercise 2', 'Exercise 3'];
+  final List<String> demoExcercises = <String>['Overhead press', 'Arnold press', 'Leg curl', 'Lateral raise'];
   List<String> resultExcercises = [];
   TextEditingController searchEditingController = TextEditingController();
 
@@ -53,8 +53,9 @@ class _ExercisesScreenState extends State<ExercisesScreen> {
         title: const Text(
           'Exercises',
           style: TextStyle(
-            fontWeight: FontWeight.w500
-          )
+            fontWeight: FontWeight.w500,
+            fontSize: 25
+          ),
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
@@ -77,7 +78,7 @@ class _ExercisesScreenState extends State<ExercisesScreen> {
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: SizedBox(
-                height: 50,
+                height: 45,
                 child: SearchBar(
                   onChanged: (value) {
                     filterSearchResults(value);
@@ -107,8 +108,15 @@ class _ExercisesScreenState extends State<ExercisesScreen> {
                       children: <Widget>[
                         Expanded(
                           child: ListTile(
-                            title: Text(resultExcercises[index])
-                            ),
+                            title: Text(
+                              resultExcercises[index],
+                              overflow: TextOverflow.ellipsis,
+                              softWrap: false,
+                              style: const TextStyle(
+                                fontSize: 16
+                              ),
+                            )
+                          ),
                         ),
                         Flexible(
                           child: Row(
@@ -117,12 +125,12 @@ class _ExercisesScreenState extends State<ExercisesScreen> {
                               IconButton(
                                 onPressed: () => _onEditExercisePressed(index),
                                 icon: const Icon(Icons.edit),
-                                iconSize: 20,
+                                iconSize: 18,
                                 ),
                               IconButton(
                                 onPressed: () => _onDeleteExercisePressed(index),
                                 icon: const Icon(Icons.delete_forever),
-                                iconSize: 20,
+                                iconSize: 18,
                                 ),
                             ],
                           ),
