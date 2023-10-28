@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'screens/excercises_screen.dart';
+import 'screens/exercises_screen.dart';
 import 'screens/new_workout_screen.dart';
 import 'screens/workout_history_screen.dart';
 
@@ -43,7 +43,7 @@ class _RootScreenState extends State<RootScreen> {
       body: <Widget>[
         const WorkoutHistoryScreen(),
         const NewWorkoutScreen(),
-        const ExcercisesScreen(),
+        const ExercisesScreen(),
       ][_selectedPageIndex],
       bottomNavigationBar: NavigationBar(
         onDestinationSelected: (int index) {
@@ -68,11 +68,11 @@ class _RootScreenState extends State<RootScreen> {
             icon: Icon(
               Icons.list
             ),
-            label: 'Excercises'
+            label: 'Exercises'
           ),
         ],
         selectedIndex: _selectedPageIndex,
-        indicatorColor: Color.fromARGB(146, 79, 55, 139)
+        indicatorColor: const Color.fromARGB(146, 79, 55, 139)
       ),
     );
   }
