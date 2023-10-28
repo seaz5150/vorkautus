@@ -18,7 +18,6 @@ class _WorkoutHistoryScreenState
         title: const Text('Previous workouts'),
     ),
       body: Container(
-          color: Colors.red,
           alignment: Alignment.center,
           child: const Text('Workout history page content'),
         )

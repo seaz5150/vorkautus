@@ -37,12 +37,6 @@ class RootScreen extends StatefulWidget {
 class _RootScreenState extends State<RootScreen> {
   int _selectedPageIndex = 0;
 
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedPageIndex = index;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -51,24 +45,34 @@ class _RootScreenState extends State<RootScreen> {
         const NewWorkoutScreen(),
         const ExcercisesScreen(),
       ][_selectedPageIndex],
-      bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.bookmark),
+      bottomNavigationBar: NavigationBar(
+        onDestinationSelected: (int index) {
+          setState(() {
+            _selectedPageIndex = index;
+          });
+        },
+        destinations: const <Widget>[
+          NavigationDestination(
+            icon: Icon(
+              Icons.bookmark
+            ),
             label: 'History',
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.add),
+          NavigationDestination(
+            icon: Icon(
+              Icons.add
+            ),
             label: 'New workout',
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.list),
-            label: 'Excercises',
+          NavigationDestination(
+            icon: Icon(
+              Icons.list
+            ),
+            label: 'Excercises'
           ),
         ],
-        currentIndex: _selectedPageIndex,
-        selectedItemColor: Colors.amber[800],
-        onTap: _onItemTapped,
+        selectedIndex: _selectedPageIndex,
+        indicatorColor: Color.fromARGB(146, 79, 55, 139)
       ),
     );
   }

@@ -18,7 +18,6 @@ class _NewWorkoutScreenState
         title: const Text('New workout'),
     ),
       body: Container(
-          color: Colors.red,
           alignment: Alignment.center,
           child: const Text('New workout page content'),
         )
