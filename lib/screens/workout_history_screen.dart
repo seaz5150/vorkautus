@@ -15,7 +15,12 @@ class _WorkoutHistoryScreenState
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Previous workouts'),
+        title: const Text(
+          'Previous workouts',
+          style: TextStyle(
+            fontWeight: FontWeight.w500
+          )
+        ),
     ),
       body: Container(
           alignment: Alignment.center,

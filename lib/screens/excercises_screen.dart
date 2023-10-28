@@ -44,7 +44,12 @@ class _ExcercisesScreenState extends State<ExcercisesScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Excercises'),
+        title: const Text(
+          'Excercises',
+          style: TextStyle(
+            fontWeight: FontWeight.w500
+          )
+        ),
     ),
       body: Column(
         children: [
@@ -57,8 +62,11 @@ class _ExcercisesScreenState extends State<ExcercisesScreen> {
                 },
                 controller: searchEditingController,
                 padding: const MaterialStatePropertyAll<EdgeInsets>(EdgeInsets.symmetric(horizontal: 16.0)),
-                leading: const Icon(Icons.search),
-                
+                leading: const Icon(
+                  Icons.search,
+                  size: 20
+                ),
+                hintText: "Search..."
               ),
             ),
           ),

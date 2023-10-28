@@ -15,7 +15,12 @@ class _NewWorkoutScreenState
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('New workout'),
+        title: const Text(
+          'New workout',
+          style: TextStyle(
+            fontWeight: FontWeight.w500
+          )
+        ),
     ),
       body: Container(
           alignment: Alignment.center,
