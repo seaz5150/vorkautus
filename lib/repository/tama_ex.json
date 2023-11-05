@@ -1,0 +1,61 @@
+{
+    "Workout": {
+      "Id": 1,
+      "Name": "Sample Workout",
+      "ExcerciseIds": [1, 2]
+    },
+    "Excercise": [
+      {
+        "Id": 1,
+        "Name": "Exercise 1",
+        "ExcerciseTemplateId": 101,
+        "PauseTime": 30,
+        "SetIds": [1, 2]
+      },
+      {
+        "Id": 2,
+        "Name": "Exercise 2",
+        "ExcerciseTemplateId": 102,
+        "PauseTime": 20,
+        "SetIds": [3, 4]
+      }
+    ],
+    "ExcerciseTemplate": {
+      "Id": 101,
+      "Name": "Template 1"
+    },
+    "Set": [
+      {
+        "Id": 1,
+        "Weight": 50.0,
+        "Reps": 10,
+        "TimeOfSet": 60
+      },
+      {
+        "Id": 2,
+        "Weight": 45.0,
+        "Reps": 12,
+        "TimeOfSet": 75
+      },
+      {
+        "Id": 3,
+        "Weight": 30.0,
+        "Reps": 8,
+        "TimeOfSet": 45
+      },
+      {
+        "Id": 4,
+        "Weight": 55.0,
+        "Reps": 10,
+        "TimeOfSet": 65
+      }
+    ],
+    "Question": {
+      "Id": 1,
+      "Question": "What is 2 + 2?",
+      "AnsweredCount": 0,
+      "RightAnswer": "4",
+      "WrongAnswers": ["3", "5", "6"]
+    }
+  }
+  
