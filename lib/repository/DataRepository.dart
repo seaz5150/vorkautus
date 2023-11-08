@@ -11,99 +11,158 @@ class DataRepository {
   String jsonFilePath = "";
   String jsonFileContent = "";
 
+  List<ExerciseDTO> getExercisesFromJson() {
+    final List<dynamic> jsonArray = json.decode(jsonFileContent);
+    final List<ExerciseDTO> exercises = jsonArray.map((data) {
+      return ExerciseDTO.fromJson(data);
+    }).toList();
 
+    return exercises;
+  }
 
+  ExerciseDTO? getExerciseById(int id) {
+    List<ExerciseDTO?> exercises = getExercisesFromJson();
+    final exercise =
+        exercises.firstWhere((e) => e?.id == id, orElse: () => null);
+    return exercise;
+  }
 
-List<ExerciseDTO> getExercisesFromJson() {
-  final List<dynamic> jsonArray = json.decode(jsonFileContent);
-  final List<ExerciseDTO> exercises = jsonArray.map((data) {
-    return ExerciseDTO.fromJson(data);
-  }).toList();
+  bool saveExercise(ExerciseDTO ex) {
+    final List<dynamic> jsonArray = json.decode(jsonFileContent);
+    try {
+      jsonArray.add(ex.toJson());
+    } catch (e) {
+      return false;
+    }
+    return true;
+  }
 
-  return exercises;
-}
+  List<ExerciseTemplateDTO> getExerciseTemplatesFromJson() {
+    final List<dynamic> jsonArray = json.decode(jsonFileContent);
+    final List<ExerciseTemplateDTO> exTemplates = jsonArray.map((data) {
+      return ExerciseTemplateDTO.fromJson(data);
+    }).toList();
 
-ExerciseDTO? getExerciseById(int id) {
-  List<ExerciseDTO?> exercises = getExercisesFromJson();
-  final exercise = exercises.firstWhere((e) => e?.id == id, orElse: () => null);
-  return exercise;
-}
+    return exTemplates;
+  }
 
+  ExerciseTemplateDTO? getExerciseTemplateById(int id) {
+    List<ExerciseTemplateDTO?> exTemplates = getExerciseTemplatesFromJson();
+    final exTemplate =
+        exTemplates.firstWhere((e) => e?.id == id, orElse: () => null);
+    return exTemplate;
+  }
 
+  bool saveExerciseTemplate(ExerciseTemplateDTO exT) {
+    final List<dynamic> jsonArray = json.decode(jsonFileContent);
+    try {
+      jsonArray.add(exT.toJson());
+    } catch (e) {
+      return false;
+    }
+    return true;
+  }
 
+  List<QuestionDTO> getQuestionsFromJson() {
+    final List<dynamic> jsonArray = json.decode(jsonFileContent);
+    final List<QuestionDTO> questions = jsonArray.map((data) {
+      return QuestionDTO.fromJson(data);
+    }).toList();
 
+    return questions;
+  }
 
-List<ExerciseTemplateDTO> getExerciseTemplatesFromJson() {
-  final List<dynamic> jsonArray = json.decode(jsonFileContent);
-  final List<ExerciseTemplateDTO> exTemplates = jsonArray.map((data) {
-    return ExerciseTemplateDTO.fromJson(data);
-  }).toList();
+  QuestionDTO? getQuestionById(int id) {
+    List<QuestionDTO?> questions = getQuestionsFromJson();
+    final question =
+        questions.firstWhere((e) => e?.id == id, orElse: () => null);
+    return question;
+  }
 
-  return exTemplates;
-}
+  QuestionDTO? getRandomQuestion() {
+    List<QuestionDTO?> questions = getQuestionsFromJson();
+    var randomId = Random().nextInt(questions.length);
+    final question =
+        questions.firstWhere((e) => e?.id == randomId, orElse: () => null);
+    return question;
+  }
 
-ExerciseTemplateDTO? getExerciseTemplateById(int id) {
-  List<ExerciseTemplateDTO?> exTemplates = getExerciseTemplatesFromJson();
-  final exTemplate = exTemplates.firstWhere((e) => e?.id == id, orElse: () => null);
-  return exTemplate;
-}
+  bool saveQuestion(QuestionDTO question) {
+    final List<dynamic> jsonArray = json.decode(jsonFileContent);
+    try {
+      jsonArray.add(question.toJson());
+    } catch (e) {
+      return false;
+    }
+    return true;
+  }
 
+  List<SetDTO> getSetsFromJson() {
+    final List<dynamic> jsonArray = json.decode(jsonFileContent);
+    final List<SetDTO> sets = jsonArray.map((data) {
+      return SetDTO.fromJson(data);
+    }).toList();
 
+    return sets;
+  }
 
-List<QuestionDTO> getQuestionsFromJson() {
-  final List<dynamic> jsonArray = json.decode(jsonFileContent);
-  final List<QuestionDTO> questions = jsonArray.map((data) {
-    return QuestionDTO.fromJson(data);
-  }).toList();
+  SetDTO? getSetById(int id) {
+    List<SetDTO?> sets = getSetsFromJson();
+    final set = sets.firstWhere((e) => e?.id == id, orElse: () => null);
+    return set;
+  }
 
-  return questions;
-}
-QuestionDTO? getQuestionById(int id) {
-  List<QuestionDTO?> questions = getQuestionsFromJson();
-  final question = questions.firstWhere((e) => e?.id == id, orElse: () => null);
-  return question;
-}
+  bool saveSet(SetDTO set) {
+    final List<dynamic> jsonArray = json.decode(jsonFileContent);
+    try {
+      jsonArray.add(set.toJson());
+    } catch (e) {
+      return false;
+    }
+    return true;
+  }
 
-QuestionDTO? getRandomQuestion() {
-  List<QuestionDTO?> questions = getQuestionsFromJson();
-  var randomId = Random().nextInt(questions.length);
-  final question = questions.firstWhere((e) => e?.id == randomId, orElse: () => null);
-  return question;
-}
+  List<WorkoutDTO> getWorkoutsFromJson() {
+    final List<dynamic> jsonArray = json.decode(jsonFileContent);
+    final List<WorkoutDTO> workouts = jsonArray.map((data) {
+      return WorkoutDTO.fromJson(data);
+    }).toList();
 
+    return workouts;
+  }
 
+  WorkoutDTO? getWorkoutById(int id) {
+    List<WorkoutDTO?> workouts = getWorkoutsFromJson();
+    final workout = workouts.firstWhere((e) => e?.id == id, orElse: () => null);
+    return workout;
+  }
 
+  bool saveWorkout(WorkoutDTO wo) {
+    final List<dynamic> jsonArray = json.decode(jsonFileContent);
+    try {
+      jsonArray.add(wo.toJson());
+    } catch (e) {
+      return false;
+    }
+    return true;
+  }
 
-List<SetDTO> getSetsFromJson() {
-  final List<dynamic> jsonArray = json.decode(jsonFileContent);
-  final List<SetDTO> sets = jsonArray.map((data) {
-    return SetDTO.fromJson(data);
-  }).toList();
+  String saveObject(dynamic obj) {
+    bool isSaveOK = false;
 
-  return sets;
-}
-SetDTO? getSetById(int id) {
-  List<SetDTO?> sets = getSetsFromJson();
-  final set = sets.firstWhere((e) => e?.id == id, orElse: () => null);
-  return set;
-}
+    if (obj is ExerciseDTO)
+      isSaveOK = saveExercise(obj);
+    else if (obj is ExerciseTemplateDTO)
+      isSaveOK = saveExerciseTemplate(obj);
+    else if (obj is QuestionDTO)
+      isSaveOK = saveQuestion(obj);
+    else if (obj is SetDTO)
+      isSaveOK = saveSet(obj);
+    else
+      isSaveOK = saveWorkout(obj);
 
-List<WorkoutDTO> getWorkoutsFromJson() {
-  final List<dynamic> jsonArray = json.decode(jsonFileContent);
-  final List<WorkoutDTO> workouts = jsonArray.map((data) {
-    return WorkoutDTO.fromJson(data);
-  }).toList();
+    if (isSaveOK) return "";
 
-  return workouts;
-}
-WorkoutDTO? getWorkoutById(int id) {
-  List<WorkoutDTO?> workouts = getWorkoutsFromJson();
-  final workout = workouts.firstWhere((e) => e?.id == id, orElse: () => null);
-  return workout;
-}
-
-
-
-
-
+    return "There happened an error while saving the object";
+  }
 }
