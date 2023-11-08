@@ -1,6 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 
-part 'ExcerciseTemplateDTO.g.dart';
+part 'ExerciseTemplateDTO.g.dart';
 
 @JsonSerializable()
 class ExerciseTemplateDTO {

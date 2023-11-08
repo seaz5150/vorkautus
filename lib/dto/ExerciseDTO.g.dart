@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'ExcerciseDTO.dart';
+part of 'ExerciseDTO.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
