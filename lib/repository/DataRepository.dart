@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:math';
+import 'dart:io';
 
 import 'package:vorkautus/dto/ExerciseDTO.dart';
 import 'package:vorkautus/dto/ExerciseTemplateDTO.dart';
@@ -8,11 +9,18 @@ import 'package:vorkautus/dto/SetDTO.dart';
 import 'package:vorkautus/dto/WorkoutDTO.dart';
 
 class DataRepository {
-  String jsonFilePath = "";
-  String jsonFileContent = "";
+  final jsonFile = File("TODO");
+  late List<dynamic> jsonArray;
+
+  DataRepository() {
+    if (jsonFile.existsSync()) {
+      final content = jsonFile.readAsStringSync();
+      List<dynamic> jsonArray =
+          List<Map<String, dynamic>>.from(json.decode(content));
+    }
+  }
 
   List<ExerciseDTO> getExercisesFromJson() {
-    final List<dynamic> jsonArray = json.decode(jsonFileContent);
     final List<ExerciseDTO> exercises = jsonArray.map((data) {
       return ExerciseDTO.fromJson(data);
     }).toList();
@@ -28,7 +36,6 @@ class DataRepository {
   }
 
   bool saveExercise(ExerciseDTO ex) {
-    final List<dynamic> jsonArray = json.decode(jsonFileContent);
     try {
       jsonArray.add(ex.toJson());
     } catch (e) {
@@ -38,7 +45,6 @@ class DataRepository {
   }
 
   List<ExerciseTemplateDTO> getExerciseTemplatesFromJson() {
-    final List<dynamic> jsonArray = json.decode(jsonFileContent);
     final List<ExerciseTemplateDTO> exTemplates = jsonArray.map((data) {
       return ExerciseTemplateDTO.fromJson(data);
     }).toList();
@@ -54,7 +60,6 @@ class DataRepository {
   }
 
   bool saveExerciseTemplate(ExerciseTemplateDTO exT) {
-    final List<dynamic> jsonArray = json.decode(jsonFileContent);
     try {
       jsonArray.add(exT.toJson());
     } catch (e) {
@@ -64,7 +69,6 @@ class DataRepository {
   }
 
   List<QuestionDTO> getQuestionsFromJson() {
-    final List<dynamic> jsonArray = json.decode(jsonFileContent);
     final List<QuestionDTO> questions = jsonArray.map((data) {
       return QuestionDTO.fromJson(data);
     }).toList();
@@ -88,7 +92,6 @@ class DataRepository {
   }
 
   bool saveQuestion(QuestionDTO question) {
-    final List<dynamic> jsonArray = json.decode(jsonFileContent);
     try {
       jsonArray.add(question.toJson());
     } catch (e) {
@@ -98,7 +101,6 @@ class DataRepository {
   }
 
   List<SetDTO> getSetsFromJson() {
-    final List<dynamic> jsonArray = json.decode(jsonFileContent);
     final List<SetDTO> sets = jsonArray.map((data) {
       return SetDTO.fromJson(data);
     }).toList();
@@ -113,7 +115,6 @@ class DataRepository {
   }
 
   bool saveSet(SetDTO set) {
-    final List<dynamic> jsonArray = json.decode(jsonFileContent);
     try {
       jsonArray.add(set.toJson());
     } catch (e) {
@@ -123,7 +124,6 @@ class DataRepository {
   }
 
   List<WorkoutDTO> getWorkoutsFromJson() {
-    final List<dynamic> jsonArray = json.decode(jsonFileContent);
     final List<WorkoutDTO> workouts = jsonArray.map((data) {
       return WorkoutDTO.fromJson(data);
     }).toList();
@@ -138,7 +138,6 @@ class DataRepository {
   }
 
   bool saveWorkout(WorkoutDTO wo) {
-    final List<dynamic> jsonArray = json.decode(jsonFileContent);
     try {
       jsonArray.add(wo.toJson());
     } catch (e) {
@@ -161,8 +160,15 @@ class DataRepository {
     else
       isSaveOK = saveWorkout(obj);
 
-    if (isSaveOK) return "";
-
+    if (isSaveOK) {
+      UpdateJson();
+      return "";
+    }
     return "There happened an error while saving the object";
+  }
+
+  void UpdateJson() {
+    final updatedJsonData = json.encode(jsonArray);
+    jsonFile.writeAsStringSync(updatedJsonData);
   }
 }
