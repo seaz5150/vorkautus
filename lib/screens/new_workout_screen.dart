@@ -19,7 +19,7 @@ class _NewWorkoutScreenState extends State<NewWorkoutScreen> {
   ];
   Timer? workoutTimer;
   Duration workoutDuration = const Duration();
-  WorkoutDTO workout = WorkoutDTO(1, "My Workout #1", <int>[]);
+  WorkoutDTO workout = WorkoutDTO(1, "My Workout #1", <int>[], false, DateTime.now().toString());
 
   @override
   void initState() {
