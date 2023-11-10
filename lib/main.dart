@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'screens/exercises_screen.dart';
 import 'screens/new_workout_screen.dart';
 import 'screens/workout_history_screen.dart';
+import 'globals.dart' as globals;
 
 // Project structure guide: https://medium.com/flutter-community/scalable-folder-structure-for-flutter-applications-183746bdc320 (Folders By Type/Domain)
 // For performing operations on the JSON data maybe this architecture: https://codewithandrea.com/articles/flutter-repository-pattern/
@@ -37,6 +38,39 @@ class RootScreen extends StatefulWidget {
 class _RootScreenState extends State<RootScreen> {
   int _selectedPageIndex = 0;
 
+  List<Widget> getMenuItems() {
+    if (globals.workoutActive) {
+      if (globals.exerciseActive) {
+        return const <Widget>[
+            NavigationDestination(icon: Icon(Icons.close, color: Colors.red), label: 'Cancel exercise'),
+            NavigationDestination(icon: Icon(Icons.checklist_rtl, color: Colors.green), label: 'Finish exercise'),
+        ];
+      }
+      else {
+        return const <Widget>[
+            NavigationDestination(icon: Icon(Icons.close, color: Colors.red), label: 'Cancel workout'),
+            NavigationDestination(icon: Icon(Icons.checklist_rtl, color: Colors.green), label: 'Finish workout'),
+        ];
+      }
+    }
+    else {
+      return const <Widget>[
+          NavigationDestination(icon: Icon(Icons.bookmark), label: 'History'),
+          NavigationDestination(icon: Icon(Icons.add), label: 'New workout'),
+          NavigationDestination(icon: Icon(Icons.list), label: 'Exercises'),
+      ];
+    }
+  }
+
+  Color getSelectedColor() {
+    if (!globals.workoutActive) {
+      return const Color.fromARGB(146, 79, 55, 139);
+    }
+    else {
+      return const Color.fromARGB(0, 0, 0, 0);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -48,31 +82,39 @@ class _RootScreenState extends State<RootScreen> {
       bottomNavigationBar: NavigationBar(
         onDestinationSelected: (int index) {
           setState(() {
-            _selectedPageIndex = index;
+            if (!globals.workoutActive) {
+              // New workout started.
+              if (index == 1) {
+                  globals.workoutActive = true;
+              }
+              _selectedPageIndex = index;
+            }
+            else {
+              if (!globals.exerciseActive) {
+                if (index == 0) {
+                  // Cancel workout
+                }
+                else {
+                  // Finish workout
+                }
+                globals.workoutActive = false;
+                _selectedPageIndex = 0;
+              }
+              else {
+                if (index == 0) {
+                  // Cancel exercise
+                }
+                else {
+                  // Finish exercise
+                }
+                globals.exerciseActive = false;
+              }
+            }
           });
         },
-        destinations: const <Widget>[
-          NavigationDestination(
-            icon: Icon(
-              Icons.bookmark
-            ),
-            label: 'History',
-          ),
-          NavigationDestination(
-            icon: Icon(
-              Icons.add
-            ),
-            label: 'New workout',
-          ),
-          NavigationDestination(
-            icon: Icon(
-              Icons.list
-            ),
-            label: 'Exercises'
-          ),
-        ],
+        destinations: getMenuItems(),
         selectedIndex: _selectedPageIndex,
-        indicatorColor: const Color.fromARGB(146, 79, 55, 139)
+        indicatorColor: getSelectedColor()
       ),
     );
   }

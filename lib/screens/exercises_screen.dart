@@ -27,7 +27,7 @@ class _ExercisesScreenState extends State<ExercisesScreen> {
     // });
   }
 
-    void _onDeleteExercisePressed(int index) {
+  void _onDeleteExercisePressed(int index) {
     // setState(() {
 
     // });
