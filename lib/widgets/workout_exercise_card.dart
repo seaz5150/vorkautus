@@ -8,8 +8,13 @@ import 'package:collection/collection.dart';
 class WorkoutExerciseCard extends StatefulWidget {
   final List<ExerciseDTO> exercises;
   final int exerciseIndex;
+  final Function(int) exerciseStartedCallback;
+
   const WorkoutExerciseCard(
-      {super.key, required this.exercises, required this.exerciseIndex});
+      {super.key,
+      required this.exercises,
+      required this.exerciseIndex,
+      required this.exerciseStartedCallback});
 
   @override
   State<WorkoutExerciseCard> createState() => _WorkoutExerciseCardState();
@@ -42,7 +47,9 @@ class _WorkoutExerciseCardState extends State<WorkoutExerciseCard> {
     widget.exercises.removeAt(widget.exerciseIndex);
   }
 
-  void _onStartExercisePressed() {}
+  void _onStartExercisePressed() {
+    widget.exerciseStartedCallback(widget.exerciseIndex);
+  }
 
   @override
   Widget build(BuildContext context) {

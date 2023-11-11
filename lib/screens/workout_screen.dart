@@ -1,20 +1,22 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:vorkautus/dto/ExerciseDTO.dart';
 import 'package:vorkautus/dto/ExerciseTemplateDTO.dart';
+import 'package:vorkautus/dto/SetDTO.dart';
 import 'package:vorkautus/dto/WorkoutDTO.dart';
 import 'package:vorkautus/widgets/workout_exercise_card.dart';
 import '../globals.dart' as globals;
 
-class NewWorkoutScreen extends StatefulWidget {
-  const NewWorkoutScreen({super.key});
+class WorkoutScreen extends StatefulWidget {
+  const WorkoutScreen({super.key});
 
   @override
-  State<NewWorkoutScreen> createState() => _NewWorkoutScreenState();
+  State<WorkoutScreen> createState() => _WorkoutScreenState();
 }
 
-class _NewWorkoutScreenState extends State<NewWorkoutScreen> {
+class _WorkoutScreenState extends State<WorkoutScreen> {
   List<ExerciseDTO> exercises = [];
   List<ExerciseTemplateDTO> availableExerciseTemplates = [];
   ExerciseTemplateDTO? selectedExerciseTemplate;
@@ -22,6 +24,11 @@ class _NewWorkoutScreenState extends State<NewWorkoutScreen> {
   Duration workoutDuration = const Duration();
   WorkoutDTO workout =
       WorkoutDTO(1, "My Workout #1", <int>[], false, DateTime.now().toString());
+  bool exerciseRestActive = false;
+  bool exerciseSetActive = false;
+  ExerciseDTO? activeExercise;
+  List<SetDTO> activeExerciseSets = [];
+  SetDTO? activeSet;
 
   @override
   void initState() {
@@ -29,6 +36,9 @@ class _NewWorkoutScreenState extends State<NewWorkoutScreen> {
     workoutTimer = Timer.periodic(const Duration(seconds: 1), (_) => addTime());
     availableExerciseTemplates =
         globals.repository.getExerciseTemplatesFromJson();
+    // Pass the workout to globals in case it needs to be saved.
+    globals.activeWorkout = workout;
+    globals.activeWorkoutExercises = exercises;
   }
 
   @override
@@ -47,7 +57,17 @@ class _NewWorkoutScreenState extends State<NewWorkoutScreen> {
     return d.toString().split('.').first.padLeft(8, "0");
   }
 
-  void _onEditWorkoutNamePressed() {
+  void _onEditWorkoutNamePressed() {}
+
+  void startExercise(int index) {
+    setState(() {
+      globals.exerciseActive = true;
+      exerciseSetActive = true;
+      activeExercise = exercises[index];
+      activeSet = SetDTO(1, 0, 0, 0);
+      activeExerciseSets.add(activeSet!);
+      globals.rerenderMain!(() {});
+    });
   }
 
   Future<void> _onNewExercisePressed() async {
@@ -94,6 +114,51 @@ class _NewWorkoutScreenState extends State<NewWorkoutScreen> {
 
   @override
   Widget build(BuildContext context) {
+    if (globals.exerciseActive && exerciseRestActive) {
+      return getSetRestScreen();
+    } else if (globals.exerciseActive && exerciseSetActive) {
+      return getActiveSetScreen();
+    } else {
+      return getSummaryScreen();
+    }
+  }
+
+  Widget getSetRestScreen() {
+    return Scaffold(
+        body: Column(
+      children: [],
+    ));
+  }
+
+  Widget getActiveSetScreen() {
+    return Scaffold(
+        body: Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Center(
+        child: Column(
+          children: [
+            Text(activeExercise!.name,
+                style:
+                    const TextStyle(fontWeight: FontWeight.w500, fontSize: 35)),
+            Text("Set #${activeExerciseSets.indexOf(activeSet!) + 1}",
+                style: const TextStyle(
+                    fontWeight: FontWeight.w500,
+                    fontSize: 25,
+                    color: Color.fromARGB(198, 52, 52, 52))),
+            const Padding(
+              padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
+              child: Image(
+                image: AssetImage('assets/vorkautus.png'),
+                width: 80,
+              ),
+            )
+          ],
+        ),
+      ),
+    ));
+  }
+
+  Widget getSummaryScreen() {
     return Scaffold(
         appBar: AppBar(
           title: Column(
@@ -145,7 +210,10 @@ class _NewWorkoutScreenState extends State<NewWorkoutScreen> {
                           top: 8, left: 8, right: 8, bottom: 70),
                       itemCount: exercises.length,
                       itemBuilder: (_, index) {
-                        return WorkoutExerciseCard(exercises: exercises, exerciseIndex: index);
+                        return WorkoutExerciseCard(
+                            exercises: exercises,
+                            exerciseIndex: index,
+                            exerciseStartedCallback: startExercise);
                       });
                 } else {
                   return const Center(
