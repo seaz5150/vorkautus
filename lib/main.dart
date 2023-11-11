@@ -38,6 +38,12 @@ class RootScreen extends StatefulWidget {
 class _RootScreenState extends State<RootScreen> {
   int _selectedPageIndex = 0;
 
+  @override
+  void initState() {
+    super.initState();
+    globals.repository.loadDataFromJson();
+  }
+
   List<Widget> getMenuItems() {
     if (globals.workoutActive) {
       if (globals.exerciseActive) {

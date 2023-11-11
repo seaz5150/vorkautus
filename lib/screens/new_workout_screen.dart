@@ -1,7 +1,11 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:vorkautus/dto/ExerciseDTO.dart';
+import 'package:vorkautus/dto/ExerciseTemplateDTO.dart';
 import 'package:vorkautus/dto/WorkoutDTO.dart';
+import 'package:vorkautus/widgets/workout_exercise_card.dart';
+import '../globals.dart' as globals;
 
 class NewWorkoutScreen extends StatefulWidget {
   const NewWorkoutScreen({super.key});
@@ -11,20 +15,20 @@ class NewWorkoutScreen extends StatefulWidget {
 }
 
 class _NewWorkoutScreenState extends State<NewWorkoutScreen> {
-  final List<String> demoExcercises = <String>[
-    'Overhead press',
-    'Arnold press',
-    'Leg curl',
-    'Lateral raise'
-  ];
+  List<ExerciseDTO> exercises = [];
+  List<ExerciseTemplateDTO> availableExerciseTemplates = [];
+  ExerciseTemplateDTO? selectedExerciseTemplate;
   Timer? workoutTimer;
   Duration workoutDuration = const Duration();
-  WorkoutDTO workout = WorkoutDTO(1, "My Workout #1", <int>[], false, DateTime.now().toString());
+  WorkoutDTO workout =
+      WorkoutDTO(1, "My Workout #1", <int>[], false, DateTime.now().toString());
 
   @override
   void initState() {
     super.initState();
     workoutTimer = Timer.periodic(const Duration(seconds: 1), (_) => addTime());
+    availableExerciseTemplates =
+        globals.repository.getExerciseTemplatesFromJson();
   }
 
   @override
@@ -43,28 +47,49 @@ class _NewWorkoutScreenState extends State<NewWorkoutScreen> {
     return d.toString().split('.').first.padLeft(8, "0");
   }
 
-  void _onDeleteExercisePressed(int index) {
-    // setState(() {
-
-    // });
-  }
-
   void _onEditWorkoutNamePressed() {
-    // setState(() {
-
-    // });
   }
 
-  void _onNewExercisePressed() {
-    // setState(() {
-
-    // });
-  }
-
-  void _onStartExercisePressed(int index) {
-    // setState(() {
-
-    // });
+  Future<void> _onNewExercisePressed() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Exercise addition'),
+          content: DropdownMenu<ExerciseTemplateDTO>(
+            initialSelection: availableExerciseTemplates.first,
+            onSelected: (ExerciseTemplateDTO? value) {
+              setState(() {
+                selectedExerciseTemplate = value!;
+              });
+            },
+            dropdownMenuEntries: availableExerciseTemplates
+                .map<DropdownMenuEntry<ExerciseTemplateDTO>>(
+                    (ExerciseTemplateDTO value) {
+              return DropdownMenuEntry<ExerciseTemplateDTO>(
+                  value: value, label: value.name);
+            }).toList(),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: const Text('Confirm'),
+              onPressed: () {
+                exercises.add(ExerciseDTO(1, selectedExerciseTemplate!.name,
+                    selectedExerciseTemplate!.id, 60, []));
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -112,144 +137,23 @@ class _NewWorkoutScreenState extends State<NewWorkoutScreen> {
         body: Column(
           children: [
             Expanded(
-              child: ListView.builder(
-                  scrollDirection: Axis.vertical,
-                  padding: const EdgeInsets.only(top: 8, left: 8, right: 8, bottom: 70),
-                  itemCount: demoExcercises.length,
-                  itemBuilder: (_, index) {
-                    return Card(
-                      child: Padding(
-                        padding: const EdgeInsets.only(left: 2, right: 2),
-                        child: Column(
-                          children: [
-                            Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: <Widget>[
-                                  Expanded(
-                                    child: ListTile(
-                                        title: Text(
-                                      demoExcercises[index],
-                                      overflow: TextOverflow.ellipsis,
-                                      softWrap: false,
-                                      style: const TextStyle(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.w500),
-                                    )),
-                                  ),
-                                  Flexible(
-                                    child: IconButton(
-                                      onPressed: () =>
-                                          _onDeleteExercisePressed(index),
-                                      icon: const Icon(Icons.close),
-                                      iconSize: 18,
-                                    ),
-                                  )
-                                ]),
-                            Padding(
-                              padding: const EdgeInsets.only(bottom: 8.0),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                children: [
-                                DataTable(
-                                  columnSpacing: 30,
-                                  dataRowHeight: 25,
-                                  headingRowHeight: 25,
-                                  columns: const <DataColumn>[
-                                    DataColumn(
-                                      label: Expanded(
-                                        child: Text(
-                                          'Set',
-                                          style: TextStyle(
-                                              fontStyle: FontStyle.italic,
-                                              fontSize: 13),
-                                        ),
-                                      ),
-                                    ),
-                                    DataColumn(
-                                      label: Expanded(
-                                        child: Text(
-                                          'Reps',
-                                          style: TextStyle(
-                                              fontStyle: FontStyle.italic,
-                                              fontSize: 13),
-                                        ),
-                                      ),
-                                    ),
-                                    DataColumn(
-                                      label: Expanded(
-                                        child: Text(
-                                          'Weight',
-                                          style: TextStyle(
-                                              fontStyle: FontStyle.italic,
-                                              fontSize: 13),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                  rows: const <DataRow>[
-                                    DataRow(
-                                      cells: <DataCell>[
-                                        DataCell(Text('#1',
-                                            style: TextStyle(fontSize: 13))),
-                                        DataCell(Text('12x',
-                                            style: TextStyle(fontSize: 13))),
-                                        DataCell(Text('30kg',
-                                            style: TextStyle(fontSize: 13))),
-                                      ],
-                                    ),
-                                    DataRow(
-                                      cells: <DataCell>[
-                                        DataCell(Text('#2',
-                                            style: TextStyle(fontSize: 13))),
-                                        DataCell(Text('10x',
-                                            style: TextStyle(fontSize: 13))),
-                                        DataCell(Text('25kg',
-                                            style: TextStyle(fontSize: 13))),
-                                      ],
-                                    ),
-                                    DataRow(
-                                      cells: <DataCell>[
-                                        DataCell(Text('#3',
-                                            style: TextStyle(fontSize: 13))),
-                                        DataCell(Text('8x',
-                                            style: TextStyle(fontSize: 13))),
-                                        DataCell(Text('20kg',
-                                            style: TextStyle(fontSize: 13))),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                                ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                    disabledBackgroundColor:
-                                        const Color.fromARGB(170, 102, 147, 58),
-                                  ),
-                                  onPressed: null,
-                                  child: const Row(
-                                    children: [
-                                      Icon(
-                                        Icons.check,
-                                        color: Colors.white,
-                                        size: 20,
-                                      ),
-                                      Padding(
-                                        padding: EdgeInsets.only(left: 8.0),
-                                        child: Text('DONE',
-                                            style:
-                                                TextStyle(color: Colors.white)),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ]),
-                            )
-                          ],
-                        ),
-                      ),
-                    );
-                  }),
+              child: () {
+                if (exercises.isNotEmpty) {
+                  return ListView.builder(
+                      scrollDirection: Axis.vertical,
+                      padding: const EdgeInsets.only(
+                          top: 8, left: 8, right: 8, bottom: 70),
+                      itemCount: exercises.length,
+                      itemBuilder: (_, index) {
+                        return WorkoutExerciseCard(exercises: exercises, exerciseIndex: index);
+                      });
+                } else {
+                  return const Center(
+                    child: Text("Click the plus button to add an exercise.",
+                        style: TextStyle(fontSize: 18)),
+                  );
+                }
+              }(),
             ),
           ],
         ));
