@@ -27,7 +27,7 @@ class _WorkoutScreenState extends State<WorkoutScreen>
   Timer? workoutTimer;
   Duration workoutDuration = const Duration();
   WorkoutDTO workout =
-      WorkoutDTO(globals.repository.uuid.v4(), "My Workout #1", <int>[], false, DateTime.now().toString());
+      WorkoutDTO(globals.repository.uuid.v4(), "My Workout #1", <String>[], false, DateTime.now().toString());
   bool exerciseRestActive = false;
   bool exerciseSetActive = false;
   ExerciseDTO? activeExercise;

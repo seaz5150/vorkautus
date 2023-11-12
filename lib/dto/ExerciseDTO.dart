@@ -8,7 +8,7 @@ class ExerciseDTO {
   String name;
   String exerciseTemplateId;
   int pauseTime;
-  List<int> setIds;
+  List<String> setIds;
   bool completed = false;
   int? totalTime;
 

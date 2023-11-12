@@ -81,7 +81,7 @@ class _WorkoutHistoryScreenState extends State<WorkoutHistoryScreen> {
               itemBuilder: (context, index) {
                 WorkoutDTO workout = workouts[index];
                 List<ExerciseDTO> exercises = [];
-                for (int id in workout.exerciseIds) {
+                for (String id in workout.exerciseIds) {
                   ExerciseDTO? exercise = repository.getExerciseById(id);
                   if (exercise != null) {
                     exercises.add(exercise);

@@ -38,7 +38,7 @@ class DataRepository {
     return _data.exercises;
   }
 
-  ExerciseDTO? getExerciseById(int id) {
+  ExerciseDTO? getExerciseById(String id) {
     List<ExerciseDTO> exercises = getExercisesFromJson();
     try {
       return exercises.firstWhere((e) => e.id == id);
@@ -68,7 +68,7 @@ class DataRepository {
     return _data.templates;
   }
 
-  ExerciseTemplateDTO? getExerciseTemplateById(int id) {
+  ExerciseTemplateDTO? getExerciseTemplateById(String id) {
     List<ExerciseTemplateDTO> exTemplates = getExerciseTemplatesFromJson();
     try {
       return exTemplates.firstWhere((e) => e.id == id);
@@ -98,7 +98,7 @@ class DataRepository {
     return _data.questions;
   }
 
-  QuestionDTO? getQuestionById(int id) {
+  QuestionDTO? getQuestionById(String id) {
     List<QuestionDTO> questions = getQuestionsFromJson();
     try {
       return questions.firstWhere((e) => e.id == id);
@@ -137,7 +137,7 @@ class DataRepository {
     return _data.sets;
   }
 
-  SetDTO? getSetById(int id) {
+  SetDTO? getSetById(String id) {
     List<SetDTO> sets = getSetsFromJson();
     try {
       return sets.firstWhere((e) => e.id == id);
@@ -167,7 +167,7 @@ class DataRepository {
     return _data.workouts;
   }
 
-  WorkoutDTO? getWorkoutById(int id) {
+  WorkoutDTO? getWorkoutById(String id) {
     List<WorkoutDTO> workouts = getWorkoutsFromJson();
     try {
       return workouts.firstWhere((e) => e.id == id);
@@ -251,12 +251,12 @@ class DataRepository {
     if (data is! Map<String,dynamic>) {
       // Demo data
       _data = DataDTO([
-        WorkoutDTO(uuid.v4(), "My Workout #1", [1, 2], true, '2023-11-08'),
-        WorkoutDTO(uuid.v4(), "My Workout #2", [2, 3], false, '2023-11-15'),
+        WorkoutDTO(uuid.v4(), "My Workout #1", [uuid.v4(), uuid.v4()], true, '2023-11-08'),
+        WorkoutDTO(uuid.v4(), "My Workout #2", [uuid.v4(), uuid.v4()], false, '2023-11-15'),
       ], [
-        ExerciseDTO(uuid.v4(), "Overhead press", uuid.v4(), 20, [1, 2]),
-        ExerciseDTO(uuid.v4(), "Arnold press", uuid.v4(), 20, [3, 4]),
-        ExerciseDTO(uuid.v4(), "Leg curl", uuid.v4(), 20, [5, 6]),
+        ExerciseDTO(uuid.v4(), "Overhead press", uuid.v4(), 20, [uuid.v4(), uuid.v4()]),
+        ExerciseDTO(uuid.v4(), "Arnold press", uuid.v4(), 20, [uuid.v4(), uuid.v4()]),
+        ExerciseDTO(uuid.v4(), "Leg curl", uuid.v4(), 20, [uuid.v4(), uuid.v4()]),
       ], [
         SetDTO(uuid.v4(), 10, 5, 5),
         SetDTO(uuid.v4(), 10, 5, 5),

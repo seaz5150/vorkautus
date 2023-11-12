@@ -9,7 +9,7 @@ part of 'WorkoutDTO.dart';
 WorkoutDTO _$WorkoutDTOFromJson(Map<String, dynamic> json) => WorkoutDTO(
       json['id'] as String,
       json['name'] as String,
-      (json['exerciseIds'] as List<dynamic>).map((e) => e as int).toList(),
+      (json['exerciseIds'] as List<dynamic>).map((e) => e as String).toList(),
       json['finished'] as bool,
       json['date'] as String,
     );

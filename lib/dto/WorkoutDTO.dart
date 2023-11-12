@@ -5,7 +5,7 @@ part 'WorkoutDTO.g.dart';
 class WorkoutDTO {
   String id;
   String name = '';
-  List<int> exerciseIds = [];
+  List<String> exerciseIds = [];
   bool finished = false;
   String date = '';
 
