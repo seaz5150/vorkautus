@@ -4,6 +4,7 @@ import 'package:vorkautus/dto/ExerciseDTO.dart';
 import 'package:vorkautus/dto/SetDTO.dart';
 import '../globals.dart' as globals;
 import 'package:collection/collection.dart';
+import '../utilities/misc_utilities.dart';
 
 class WorkoutExerciseCard extends StatefulWidget {
   final List<ExerciseDTO> exercises;
@@ -154,31 +155,38 @@ class _WorkoutExerciseCardState extends State<WorkoutExerciseCard> {
                           keyboardType: TextInputType.number,
                           inputFormatters: <TextInputFormatter>[
                             FilteringTextInputFormatter.digitsOnly
-                          ], // Only numbers can be entered
+                          ],
                         ),
                       ),
                     ],
                     if (exercise.completed) ...[
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          disabledBackgroundColor:
-                              const Color.fromARGB(170, 102, 147, 58),
-                        ),
-                        onPressed: null,
-                        child: const Row(
-                          children: [
-                            Icon(
-                              Icons.check,
-                              color: Colors.white,
-                              size: 20,
+                      Column(
+                        children: [
+                          Text(
+                        "Total time: ${getFormattedTime(Duration(seconds: exercise.totalTime!))}",
+                        style: const TextStyle(fontSize: 13)),
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              disabledBackgroundColor:
+                                  const Color.fromARGB(170, 102, 147, 58),
                             ),
-                            Padding(
-                              padding: EdgeInsets.only(left: 8.0),
-                              child: Text('DONE',
-                                  style: TextStyle(color: Colors.white)),
+                            onPressed: null,
+                            child: const Row(
+                              children: [
+                                Icon(
+                                  Icons.check,
+                                  color: Colors.white,
+                                  size: 20,
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.only(left: 8.0),
+                                  child: Text('DONE',
+                                      style: TextStyle(color: Colors.white)),
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                     ] else ...[
                       ElevatedButton(

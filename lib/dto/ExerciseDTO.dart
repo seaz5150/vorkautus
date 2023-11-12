@@ -10,6 +10,7 @@ class ExerciseDTO {
   int pauseTime;
   List<int> setIds;
   bool completed = false;
+  int? totalTime;
 
   ExerciseDTO(this.id, this.name, this.exerciseTemplateId, this.pauseTime, this.setIds);
 
