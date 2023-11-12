@@ -7,7 +7,7 @@ part of 'SetDTO.dart';
 // **************************************************************************
 
 SetDTO _$SetDTOFromJson(Map<String, dynamic> json) => SetDTO(
-      json['id'] as int,
+      json['id'] as String,
       (json['weight'] as num).toDouble(),
       json['reps'] as int,
       json['timeOfSet'] as int,

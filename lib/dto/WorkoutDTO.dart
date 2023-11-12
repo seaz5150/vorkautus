@@ -3,7 +3,7 @@ part 'WorkoutDTO.g.dart';
 
 @JsonSerializable()
 class WorkoutDTO {
-  int id;
+  String id;
   String name = '';
   List<int> exerciseIds = [];
   bool finished = false;

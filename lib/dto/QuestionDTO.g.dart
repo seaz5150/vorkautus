@@ -7,7 +7,7 @@ part of 'QuestionDTO.dart';
 // **************************************************************************
 
 QuestionDTO _$QuestionDTOFromJson(Map<String, dynamic> json) => QuestionDTO(
-      json['id'] as int,
+      json['id'] as String,
       json['question'] as String,
       json['answeredCount'] as int,
       json['rightAnswer'] as String,

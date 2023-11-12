@@ -7,7 +7,7 @@ part of 'ExerciseDTO.dart';
 // **************************************************************************
 
 ExerciseDTO _$ExerciseDTOFromJson(Map<String, dynamic> json) => ExerciseDTO(
-      json['id'] as int,
+      json['id'] as String,
       json['name'] as String,
       json['exerciseTemplateId'] as int,
       json['pauseTime'] as int,

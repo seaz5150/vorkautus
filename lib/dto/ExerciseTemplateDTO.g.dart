@@ -8,7 +8,7 @@ part of 'ExerciseTemplateDTO.dart';
 
 ExerciseTemplateDTO _$ExerciseTemplateDTOFromJson(Map<String, dynamic> json) =>
     ExerciseTemplateDTO(
-      json['id'] as int,
+      json['id'] as String,
       json['name'] as String,
     );
 

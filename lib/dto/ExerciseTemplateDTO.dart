@@ -4,7 +4,7 @@ part 'ExerciseTemplateDTO.g.dart';
 
 @JsonSerializable()
 class ExerciseTemplateDTO {
-  int id;
+  String id;
   String name;
 
   ExerciseTemplateDTO(this.id, this.name);

@@ -3,7 +3,7 @@ part 'SetDTO.g.dart';
 
 @JsonSerializable()
 class SetDTO {
-  int id;
+  String id;
   double weight;
   int reps;
   int timeOfSet;

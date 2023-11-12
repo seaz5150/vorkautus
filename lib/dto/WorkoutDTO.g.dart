@@ -7,7 +7,7 @@ part of 'WorkoutDTO.dart';
 // **************************************************************************
 
 WorkoutDTO _$WorkoutDTOFromJson(Map<String, dynamic> json) => WorkoutDTO(
-      json['id'] as int,
+      json['id'] as String,
       json['name'] as String,
       (json['exerciseIds'] as List<dynamic>).map((e) => e as int).toList(),
       json['finished'] as bool,

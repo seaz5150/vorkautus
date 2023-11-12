@@ -3,7 +3,7 @@ part 'QuestionDTO.g.dart';
 
 @JsonSerializable()
 class QuestionDTO {
-  int id;
+  String id;
   String question;
   int answeredCount;
   String rightAnswer;
