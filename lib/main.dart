@@ -3,6 +3,7 @@ import 'screens/exercises_screen.dart';
 import 'screens/workout_screen.dart';
 import 'screens/workout_history_screen.dart';
 import 'globals.dart' as globals;
+import '../state_tracking.dart';
 
 // Project structure guide: https://medium.com/flutter-community/scalable-folder-structure-for-flutter-applications-183746bdc320 (Folders By Type/Domain)
 // For performing operations on the JSON data maybe this architecture: https://codewithandrea.com/articles/flutter-repository-pattern/
@@ -94,8 +95,10 @@ class _RootScreenState extends State<RootScreen> {
         if (!globals.exerciseActive) {
           if (index == 0) {
             // Cancel workout
+            globals.stateProvider.notify(ObserverState.WORKOUT_CANCELED);
           } else {
             // Finish workout
+            globals.stateProvider.notify(ObserverState.WORKOUT_FINISHED);
             // Unable to save the exercises along with the workout atm...
             globals.repository.saveObject(globals.activeWorkout!);
           }
@@ -105,8 +108,10 @@ class _RootScreenState extends State<RootScreen> {
         } else {
           if (index == 0) {
             // Cancel exercise
+            globals.stateProvider.notify(ObserverState.EXERCISE_CANCELED);
           } else {
             // Finish exercise
+            globals.stateProvider.notify(ObserverState.EXERCISE_FINISHED);
           }
           globals.exerciseActive = false;
         }

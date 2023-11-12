@@ -9,6 +9,7 @@ import 'package:vorkautus/dto/WorkoutDTO.dart';
 import 'package:vorkautus/widgets/workout_exercise_card.dart';
 import '../globals.dart' as globals;
 import '../utilities/misc_utilities.dart';
+import '../state_tracking.dart';
 
 class WorkoutScreen extends StatefulWidget {
   const WorkoutScreen({super.key});
@@ -17,7 +18,8 @@ class WorkoutScreen extends StatefulWidget {
   State<WorkoutScreen> createState() => _WorkoutScreenState();
 }
 
-class _WorkoutScreenState extends State<WorkoutScreen> {
+class _WorkoutScreenState extends State<WorkoutScreen>
+    implements StateListener {
   List<ExerciseDTO> exercises = [];
   List<ExerciseTemplateDTO> availableExerciseTemplates = [];
   ExerciseTemplateDTO? selectedExerciseTemplate;
@@ -38,8 +40,32 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
   TextEditingController? weightTextFieldController;
 
   @override
+  onStateChanged(ObserverState state) {
+    switch (state) {
+      case ObserverState.EXERCISE_CANCELED:
+        _cancelExercise();
+        break;
+      case ObserverState.EXERCISE_FINISHED:
+        if (exerciseSetActive) {
+          _openPromptForWeight(_finishExercise);
+        }
+        else {
+          _finishExercise();
+        }
+        break;
+      // case ObserverState.WORKOUT_CANCELED:
+      //   break;
+      // case ObserverState.WORKOUT_FINISHED:
+      //   break;
+      default:
+        break;
+    }
+  }
+
+  @override
   void initState() {
     super.initState();
+    globals.stateProvider.subscribe(this);
     workoutTimer =
         Timer.periodic(const Duration(seconds: 1), (_) => _addTimeToWorkout());
     availableExerciseTemplates =
@@ -47,6 +73,7 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
     // Pass the workout to globals in case it needs to be saved.
     globals.activeWorkout = workout;
     globals.activeWorkoutExercises = exercises;
+    selectedExerciseTemplate = availableExerciseTemplates.first;
   }
 
   @override
@@ -54,6 +81,36 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
     super.dispose();
     workoutTimer?.cancel();
     setTimer?.cancel();
+  }
+
+  void _finishExercise() {
+    setState(() {
+      exerciseRestActive = false;
+      exerciseSetActive = false;
+      setTimer?.cancel();
+      setTimer = null;
+      setDuration = Duration.zero;
+      setRestDuration = Duration.zero;
+      setRestTimer?.cancel();
+      setRestTimer = null;
+      activeExercise = null;
+      activeExerciseSets = [];
+    });
+  }
+
+  void _cancelExercise() {
+    setState(() {
+      exerciseRestActive = false;
+      exerciseSetActive = false;
+      setTimer?.cancel();
+      setTimer = null;
+      setDuration = Duration.zero;
+      setRestDuration = Duration.zero;
+      setRestTimer?.cancel();
+      setRestTimer = null;
+      activeExercise = null;
+      activeExerciseSets = [];
+    });
   }
 
   void _addTimeToWorkout() {
@@ -80,6 +137,7 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
     setState(() {
       activeSet?.timeOfSet = setDuration.inSeconds;
       setTimer?.cancel();
+      setDuration = Duration.zero;
       setRestTimer = Timer.periodic(
           const Duration(seconds: 1), (_) => _addTimeToSetRest());
       exerciseSetActive = false;
@@ -94,6 +152,8 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
       activeSet = SetDTO(1, 0, 0, 0);
       activeExerciseSets.add(activeSet!);
       globals.rerenderMain!(() {});
+      setRestTimer?.cancel();
+      setRestDuration = Duration.zero;
       setTimer =
           Timer.periodic(const Duration(seconds: 1), (_) => _addTimeToSet());
     });
@@ -183,7 +243,7 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
         return AlertDialog(
           title: const Text('Exercise addition'),
           content: DropdownMenu<ExerciseTemplateDTO>(
-            initialSelection: availableExerciseTemplates.first,
+            initialSelection: selectedExerciseTemplate,
             onSelected: (ExerciseTemplateDTO? value) {
               setState(() {
                 selectedExerciseTemplate = value!;
