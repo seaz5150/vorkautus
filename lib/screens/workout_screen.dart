@@ -6,6 +6,7 @@ import 'package:vorkautus/dto/ExerciseDTO.dart';
 import 'package:vorkautus/dto/ExerciseTemplateDTO.dart';
 import 'package:vorkautus/dto/SetDTO.dart';
 import 'package:vorkautus/dto/WorkoutDTO.dart';
+import 'package:vorkautus/repository/DataRepository.dart';
 import 'package:vorkautus/widgets/workout_exercise_card.dart';
 import '../globals.dart' as globals;
 import '../utilities/misc_utilities.dart';
@@ -26,7 +27,7 @@ class _WorkoutScreenState extends State<WorkoutScreen>
   Timer? workoutTimer;
   Duration workoutDuration = const Duration();
   WorkoutDTO workout =
-      WorkoutDTO(1, "My Workout #1", <int>[], false, DateTime.now().toString());
+      WorkoutDTO(globals.repository.uuid.v4(), "My Workout #1", <int>[], false, DateTime.now().toString());
   bool exerciseRestActive = false;
   bool exerciseSetActive = false;
   ExerciseDTO? activeExercise;
