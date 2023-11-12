@@ -23,7 +23,9 @@ class StateProvider {
   }
 
   void notify(dynamic state) {
-    observers.forEach((StateListener obj) => obj.onStateChanged(state));
+    for (var obj in observers) {
+      obj.onStateChanged(state);
+    }
   }
 
   void dispose(StateListener thisObserver) {

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
+import 'package:uuid/uuid.dart';
 
 import 'package:path_provider/path_provider.dart';
 import 'package:vorkautus/dto/DataDTO.dart';
@@ -24,6 +25,7 @@ class DataRepository {
   late DataDTO _data;
   bool _dataLoaded = false;
   late List<dynamic> jsonArray = [];
+  late Uuid uuid = const Uuid();
 
   DataRepository() {
     loadDataFromJson();
@@ -47,6 +49,7 @@ class DataRepository {
 
   bool saveExercise(ExerciseDTO ex) {
     try {
+      ex.id == uuid.v4();
       _data.exercises.add(ex);
     } catch (e) {
       return false;
@@ -76,6 +79,7 @@ class DataRepository {
 
   bool saveExerciseTemplate(ExerciseTemplateDTO exT) {
     try {
+      exT.id == uuid.v4();
       _data.templates.add(exT);
     } catch (e) {
       return false;
@@ -114,6 +118,7 @@ class DataRepository {
 
   bool saveQuestion(QuestionDTO question) {
     try {
+      question.id == uuid.v4();
       _data.questions.add(question);
     } catch (e) {
       return false;
@@ -143,6 +148,7 @@ class DataRepository {
 
   bool saveSet(SetDTO set) {
     try {
+      set.id == uuid.v4();
       _data.sets.add(set);
     } catch (e) {
       return false;
@@ -172,6 +178,7 @@ class DataRepository {
 
   bool saveWorkout(WorkoutDTO wo) {
     try {
+      wo.id == uuid.v4();
       _data.workouts.add(wo);
     } catch (e) {
       return false;
@@ -185,6 +192,7 @@ class DataRepository {
 
   String saveObject(dynamic obj) {
     bool isSaveOK = false;
+    obj.id == uuid.v4();
 
     if (obj is ExerciseDTO) {
       isSaveOK = saveExercise(obj);
@@ -200,7 +208,7 @@ class DataRepository {
 
     if (isSaveOK) {
       _writeDataToJson();
-      return "";
+      return obj.id;
     }
     return "An error occured while saving the object";
   }
@@ -243,25 +251,25 @@ class DataRepository {
     if (data is! Map<String,dynamic>) {
       // Demo data
       _data = DataDTO([
-        WorkoutDTO(1, "My Workout #1", [1, 2], true, '2023-11-08'),
-        WorkoutDTO(2, "My Workout #2", [2, 3], false, '2023-11-15'),
+        WorkoutDTO(uuid.v4(), "My Workout #1", [1, 2], true, '2023-11-08'),
+        WorkoutDTO(uuid.v4(), "My Workout #2", [2, 3], false, '2023-11-15'),
       ], [
-        ExerciseDTO(1, "Overhead press", 1, 20, [1, 2]),
-        ExerciseDTO(2, "Arnold press", 2, 20, [3, 4]),
-        ExerciseDTO(3, "Leg curl", 3, 20, [5, 6]),
+        ExerciseDTO(uuid.v4(), "Overhead press", 1, 20, [1, 2]),
+        ExerciseDTO(uuid.v4(), "Arnold press", 2, 20, [3, 4]),
+        ExerciseDTO(uuid.v4(), "Leg curl", 3, 20, [5, 6]),
       ], [
-        SetDTO(1, 10, 5, 5),
-        SetDTO(2, 10, 5, 5),
-        SetDTO(3, 10, 5, 5),
-        SetDTO(4, 10, 5, 5),
-        SetDTO(5, 10, 5, 5),
-        SetDTO(6, 10, 5, 5),
+        SetDTO(uuid.v4(), 10, 5, 5),
+        SetDTO(uuid.v4(), 10, 5, 5),
+        SetDTO(uuid.v4(), 10, 5, 5),
+        SetDTO(uuid.v4(), 10, 5, 5),
+        SetDTO(uuid.v4(), 10, 5, 5),
+        SetDTO(uuid.v4(), 10, 5, 5),
       ], [
-        QuestionDTO(1, 'What is 2 + 2?', 0, '4', ['3', '5', '6']),
+        QuestionDTO(uuid.v4(), 'What is 2 + 2?', 0, '4', ['3', '5', '6']),
       ], [
-        ExerciseTemplateDTO(1, "Overhead press"),
-        ExerciseTemplateDTO(2, "Arnold press"),
-        ExerciseTemplateDTO(3, "Leg curl"),
+        ExerciseTemplateDTO(uuid.v4(), "Overhead press"),
+        ExerciseTemplateDTO(uuid.v4(), "Arnold press"),
+        ExerciseTemplateDTO(uuid.v4(), "Leg curl"),
       ]);
       _dataLoaded = true;
       return _data;
