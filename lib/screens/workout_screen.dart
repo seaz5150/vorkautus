@@ -150,7 +150,7 @@ class _WorkoutScreenState extends State<WorkoutScreen>
     setState(() {
       exerciseRestActive = false;
       exerciseSetActive = true;
-      activeSet = SetDTO(1, 0, 0, 0);
+      activeSet = SetDTO(globals.repository.uuid.v4(), 0, 0, 0);
       activeExerciseSets.add(activeSet!);
       globals.rerenderMain!(() {});
       setRestTimer?.cancel();
@@ -267,7 +267,7 @@ class _WorkoutScreenState extends State<WorkoutScreen>
             TextButton(
               child: const Text('Confirm'),
               onPressed: () {
-                exercises.add(ExerciseDTO(1, selectedExerciseTemplate!.name,
+                exercises.add(ExerciseDTO(globals.repository.uuid.v4(), selectedExerciseTemplate!.name,
                     selectedExerciseTemplate!.id, 60, []));
                 Navigator.of(context).pop();
               },

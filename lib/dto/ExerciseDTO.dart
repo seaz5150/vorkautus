@@ -6,7 +6,7 @@ part 'ExerciseDTO.g.dart';
 class ExerciseDTO {
   String id;
   String name;
-  int exerciseTemplateId;
+  String exerciseTemplateId;
   int pauseTime;
   List<int> setIds;
   bool completed = false;

@@ -254,9 +254,9 @@ class DataRepository {
         WorkoutDTO(uuid.v4(), "My Workout #1", [1, 2], true, '2023-11-08'),
         WorkoutDTO(uuid.v4(), "My Workout #2", [2, 3], false, '2023-11-15'),
       ], [
-        ExerciseDTO(uuid.v4(), "Overhead press", 1, 20, [1, 2]),
-        ExerciseDTO(uuid.v4(), "Arnold press", 2, 20, [3, 4]),
-        ExerciseDTO(uuid.v4(), "Leg curl", 3, 20, [5, 6]),
+        ExerciseDTO(uuid.v4(), "Overhead press", uuid.v4(), 20, [1, 2]),
+        ExerciseDTO(uuid.v4(), "Arnold press", uuid.v4(), 20, [3, 4]),
+        ExerciseDTO(uuid.v4(), "Leg curl", uuid.v4(), 20, [5, 6]),
       ], [
         SetDTO(uuid.v4(), 10, 5, 5),
         SetDTO(uuid.v4(), 10, 5, 5),

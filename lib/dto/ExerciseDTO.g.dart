@@ -9,7 +9,7 @@ part of 'ExerciseDTO.dart';
 ExerciseDTO _$ExerciseDTOFromJson(Map<String, dynamic> json) => ExerciseDTO(
       json['id'] as String,
       json['name'] as String,
-      json['exerciseTemplateId'] as int,
+      json['exerciseTemplateId'] as String,
       json['pauseTime'] as int,
       (json['setIds'] as List<dynamic>).map((e) => e as int).toList(),
     )
