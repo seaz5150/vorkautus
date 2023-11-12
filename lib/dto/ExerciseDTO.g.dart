@@ -14,7 +14,7 @@ ExerciseDTO _$ExerciseDTOFromJson(Map<String, dynamic> json) => ExerciseDTO(
       (json['setIds'] as List<dynamic>).map((e) => e as String).toList(),
     )
       ..completed = json['completed'] as bool
-      ..totalTime = json['totalTime'] as int?;
+      ..totalTime = json['totalTime'] as int;
 
 Map<String, dynamic> _$ExerciseDTOToJson(ExerciseDTO instance) =>
     <String, dynamic>{

@@ -99,10 +99,7 @@ class _RootScreenState extends State<RootScreen> {
           } else {
             // Finish workout
             globals.stateProvider.notify(ObserverState.WORKOUT_FINISHED);
-            // Unable to save the exercises along with the workout atm...
-            globals.repository.saveObject(globals.activeWorkout!);
           }
-          globals.activeWorkout = null;
           globals.workoutActive = false;
           _selectedPageIndex = 0;
         } else {
@@ -113,7 +110,6 @@ class _RootScreenState extends State<RootScreen> {
             // Finish exercise
             globals.stateProvider.notify(ObserverState.EXERCISE_FINISHED);
           }
-          globals.exerciseActive = false;
         }
       }
     });

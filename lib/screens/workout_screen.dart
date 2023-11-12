@@ -6,7 +6,6 @@ import 'package:vorkautus/dto/ExerciseDTO.dart';
 import 'package:vorkautus/dto/ExerciseTemplateDTO.dart';
 import 'package:vorkautus/dto/SetDTO.dart';
 import 'package:vorkautus/dto/WorkoutDTO.dart';
-import 'package:vorkautus/repository/DataRepository.dart';
 import 'package:vorkautus/widgets/workout_exercise_card.dart';
 import '../globals.dart' as globals;
 import '../utilities/misc_utilities.dart';
@@ -25,18 +24,18 @@ class _WorkoutScreenState extends State<WorkoutScreen>
   List<ExerciseTemplateDTO> availableExerciseTemplates = [];
   ExerciseTemplateDTO? selectedExerciseTemplate;
   Timer? workoutTimer;
-  Duration workoutDuration = const Duration();
-  WorkoutDTO workout =
-      WorkoutDTO(globals.repository.uuid.v4(), "My Workout #1", <String>[], false, DateTime.now().toString());
+  Duration workoutDuration = Duration.zero;
+  WorkoutDTO workout = WorkoutDTO(globals.repository.uuid.v4(), "My Workout #1",
+      <String>[], false, DateTime.now().toString());
   bool exerciseRestActive = false;
   bool exerciseSetActive = false;
   ExerciseDTO? activeExercise;
   List<SetDTO> activeExerciseSets = [];
   SetDTO? activeSet;
   Timer? setTimer;
-  Duration setDuration = const Duration();
+  Duration setDuration = Duration.zero;
   Timer? setRestTimer;
-  Duration setRestDuration = const Duration();
+  Duration setRestDuration = Duration.zero;
   TextEditingController? repCountTextFieldController;
   TextEditingController? weightTextFieldController;
 
@@ -45,19 +44,22 @@ class _WorkoutScreenState extends State<WorkoutScreen>
     switch (state) {
       case ObserverState.EXERCISE_CANCELED:
         _cancelExercise();
+        globals.exerciseActive = false;
         break;
       case ObserverState.EXERCISE_FINISHED:
         if (exerciseSetActive) {
           _openPromptForWeight(_finishExercise);
-        }
-        else {
+        } else {
           _finishExercise();
         }
+        globals.exerciseActive = false;
         break;
-      // case ObserverState.WORKOUT_CANCELED:
-      //   break;
-      // case ObserverState.WORKOUT_FINISHED:
-      //   break;
+      case ObserverState.WORKOUT_FINISHED:
+        _finishWorkout();
+        break;
+      case ObserverState.WORKOUT_CANCELED:
+        // Have to delete the saved exercises...
+        break;
       default:
         break;
     }
@@ -84,34 +86,52 @@ class _WorkoutScreenState extends State<WorkoutScreen>
     setTimer?.cancel();
   }
 
+  void _finishWorkout() {
+    if (mounted) {
+      workout.exerciseIds = exercises.map((e) => e.id).toList();
+      workout.finished = true;
+      globals.repository.saveObject(workout);
+    }
+  }
+
   void _finishExercise() {
-    setState(() {
-      exerciseRestActive = false;
-      exerciseSetActive = false;
-      setTimer?.cancel();
-      setTimer = null;
-      setDuration = Duration.zero;
-      setRestDuration = Duration.zero;
-      setRestTimer?.cancel();
-      setRestTimer = null;
-      activeExercise = null;
-      activeExerciseSets = [];
-    });
+    if (mounted) {
+      setState(() {
+        exerciseRestActive = false;
+        exerciseSetActive = false;
+        setTimer?.cancel();
+        setTimer = null;
+        setDuration = Duration.zero;
+        setRestDuration = Duration.zero;
+        setRestTimer?.cancel();
+        setRestTimer = null;
+
+        activeExerciseSets.forEach((s) => globals.repository.saveObject(s));
+        activeExercise?.setIds = activeExerciseSets.map((s) => s.id).toList();
+        activeExercise?.completed = true;
+        globals.repository.saveObject(activeExercise);
+
+        activeExercise = null;
+        activeExerciseSets = [];
+      });
+    }
   }
 
   void _cancelExercise() {
-    setState(() {
-      exerciseRestActive = false;
-      exerciseSetActive = false;
-      setTimer?.cancel();
-      setTimer = null;
-      setDuration = Duration.zero;
-      setRestDuration = Duration.zero;
-      setRestTimer?.cancel();
-      setRestTimer = null;
-      activeExercise = null;
-      activeExerciseSets = [];
-    });
+    if (mounted) {
+      setState(() {
+        exerciseRestActive = false;
+        exerciseSetActive = false;
+        setTimer?.cancel();
+        setTimer = null;
+        setDuration = Duration.zero;
+        setRestDuration = Duration.zero;
+        setRestTimer?.cancel();
+        setRestTimer = null;
+        activeExercise = null;
+        activeExerciseSets = [];
+      });
+    }
   }
 
   void _addTimeToWorkout() {
@@ -267,8 +287,11 @@ class _WorkoutScreenState extends State<WorkoutScreen>
             TextButton(
               child: const Text('Confirm'),
               onPressed: () {
-                exercises.add(ExerciseDTO(globals.repository.uuid.v4(), selectedExerciseTemplate!.name,
-                    selectedExerciseTemplate!.id, 60, []));
+                exercises.add(ExerciseDTO(
+                    globals.repository.uuid.v4(),
+                    selectedExerciseTemplate!.name,
+                    selectedExerciseTemplate!.id,
+                    60, []));
                 Navigator.of(context).pop();
               },
             ),
