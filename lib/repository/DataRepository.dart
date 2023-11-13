@@ -109,6 +109,11 @@ class DataRepository {
 
   QuestionDTO? getRandomQuestion() {
     List<QuestionDTO> questions = getQuestionsFromJson();
+    return getRandomQuestionFromList(questions);
+  }
+
+  
+  QuestionDTO? getRandomQuestionFromList(List<QuestionDTO> questions) {
     if (questions.isEmpty) {
       return null;
     }
@@ -266,6 +271,7 @@ class DataRepository {
         SetDTO(uuid.v4(), 10, 5, 5),
       ], [
         QuestionDTO(uuid.v4(), 'What is 2 + 2?', 0, '4', ['3', '5', '6']),
+        QuestionDTO(uuid.v4(), 'How long would it take to finish 1 hour workout?', 0, '60 minutes', ['30 minutes', '10 ', '45 mintues']),
       ], [
         ExerciseTemplateDTO(uuid.v4(), "Overhead press"),
         ExerciseTemplateDTO(uuid.v4(), "Arnold press"),

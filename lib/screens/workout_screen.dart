@@ -6,6 +6,7 @@ import 'package:vorkautus/dto/ExerciseDTO.dart';
 import 'package:vorkautus/dto/ExerciseTemplateDTO.dart';
 import 'package:vorkautus/dto/SetDTO.dart';
 import 'package:vorkautus/dto/WorkoutDTO.dart';
+import 'package:vorkautus/widgets/quiz_widget.dart';
 import 'package:vorkautus/widgets/workout_exercise_card.dart';
 import '../globals.dart' as globals;
 import '../utilities/misc_utilities.dart';
@@ -359,7 +360,10 @@ class _WorkoutScreenState extends State<WorkoutScreen>
                       style: const TextStyle(color: Colors.white)),
                 ),
               ),
-            )
+            ),
+            Expanded(
+               child: _getQuizScreen(),
+            ),
           ],
         ),
       ),
@@ -487,4 +491,7 @@ class _WorkoutScreenState extends State<WorkoutScreen>
           ],
         ));
   }
+    Widget _getQuizScreen() {
+      return QuizSubview();
+    }
 }
