@@ -44,7 +44,6 @@ class _WorkoutScreenState extends State<WorkoutScreen>
     switch (state) {
       case ObserverState.EXERCISE_CANCELED:
         _cancelExercise();
-        globals.exerciseActive = false;
         break;
       case ObserverState.EXERCISE_FINISHED:
         if (exerciseSetActive) {
@@ -52,7 +51,6 @@ class _WorkoutScreenState extends State<WorkoutScreen>
         } else {
           _finishExercise();
         }
-        globals.exerciseActive = false;
         break;
       case ObserverState.WORKOUT_FINISHED:
         _finishWorkout();
@@ -113,6 +111,8 @@ class _WorkoutScreenState extends State<WorkoutScreen>
 
         activeExercise = null;
         activeExerciseSets = [];
+
+        globals.exerciseActive = false;
       });
     }
   }
@@ -130,6 +130,8 @@ class _WorkoutScreenState extends State<WorkoutScreen>
         setRestTimer = null;
         activeExercise = null;
         activeExerciseSets = [];
+
+        globals.exerciseActive = false;
       });
     }
   }
