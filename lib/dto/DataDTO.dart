@@ -8,7 +8,7 @@ import 'ExerciseDTO.dart';
 
 part 'DataDTO.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(explicitToJson: true)
 class DataDTO {
   List<WorkoutDTO> workouts = [];
   List<ExerciseDTO> exercises = [];

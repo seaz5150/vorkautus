@@ -11,7 +11,7 @@ WorkoutDTO _$WorkoutDTOFromJson(Map<String, dynamic> json) => WorkoutDTO(
       json['name'] as String,
       (json['exerciseIds'] as List<dynamic>).map((e) => e as String).toList(),
       json['finished'] as bool,
-      json['date'] as String,
+      json['date'] == null ? null : DateTime.parse(json['date'] as String),
     );
 
 Map<String, dynamic> _$WorkoutDTOToJson(WorkoutDTO instance) =>
@@ -20,5 +20,5 @@ Map<String, dynamic> _$WorkoutDTOToJson(WorkoutDTO instance) =>
       'name': instance.name,
       'exerciseIds': instance.exerciseIds,
       'finished': instance.finished,
-      'date': instance.date,
+      'date': instance.date?.toIso8601String(),
     };

@@ -25,9 +25,9 @@ DataDTO _$DataDTOFromJson(Map<String, dynamic> json) => DataDTO(
     );
 
 Map<String, dynamic> _$DataDTOToJson(DataDTO instance) => <String, dynamic>{
-      'workouts': instance.workouts,
-      'exercises': instance.exercises,
-      'sets': instance.sets,
-      'questions': instance.questions,
-      'templates': instance.templates,
+      'workouts': instance.workouts.map((e) => e.toJson()).toList(),
+      'exercises': instance.exercises.map((e) => e.toJson()).toList(),
+      'sets': instance.sets.map((e) => e.toJson()).toList(),
+      'questions': instance.questions.map((e) => e.toJson()).toList(),
+      'templates': instance.templates.map((e) => e.toJson()).toList(),
     };

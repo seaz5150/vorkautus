@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:vorkautus/dto/ExerciseDTO.dart';
 import 'package:vorkautus/dto/WorkoutDTO.dart';
-import 'package:vorkautus/repository/DataRepository.dart';
+import '../globals.dart' as globals;
 
 class WorkoutHistoryScreen extends StatefulWidget {
   const WorkoutHistoryScreen({super.key});
@@ -12,7 +13,6 @@ class WorkoutHistoryScreen extends StatefulWidget {
 
 class _WorkoutHistoryScreenState extends State<WorkoutHistoryScreen> {
   List<WorkoutDTO> workouts = [];
-  DataRepository repository = DataRepository();
 
   Future<void> _onWorkoutDeletePressed(WorkoutDTO workout) async {
     return showDialog<void>(
@@ -31,7 +31,7 @@ class _WorkoutHistoryScreenState extends State<WorkoutHistoryScreen> {
             TextButton(
               child: const Text('Yes'),
               onPressed: () {
-                repository.removeObject(workout);
+                globals.repository.removeObject(workout);
                 _loadWorkouts();
                 Navigator.of(context).pop();
               },
@@ -41,21 +41,24 @@ class _WorkoutHistoryScreenState extends State<WorkoutHistoryScreen> {
       },
     );
   }
+
   void _onWorkoutDetailsPressed(WorkoutDTO workout) {
     // TODO: Show detail
   }
+
   void _onWorkoutStartPressed(WorkoutDTO workout) {
     // TODO: Start workout
   }
+
   void _onWorkoutRepeatPressed(WorkoutDTO workout) {
     // TODO: Copy and start workout
   }
 
   // Asynchronously load the workouts
   void _loadWorkouts() async {
-    await repository.loadDataFromJson();
+    await globals.repository.loadDataFromJson();
     setState(() {
-      workouts = repository.getWorkoutsFromJson();
+      workouts = globals.repository.getWorkoutsFromJson();
     });
   }
 
@@ -82,10 +85,21 @@ class _WorkoutHistoryScreenState extends State<WorkoutHistoryScreen> {
                 WorkoutDTO workout = workouts[index];
                 List<ExerciseDTO> exercises = [];
                 for (String id in workout.exerciseIds) {
-                  ExerciseDTO? exercise = repository.getExerciseById(id);
+                  print(id);
+                  ExerciseDTO? exercise = globals.repository.getExerciseById(id);
                   if (exercise != null) {
                     exercises.add(exercise);
                   }
+                }
+                print(workout);
+                print(workout.exerciseIds);
+                print(exercises);
+                final DateFormat dateFormatter = DateFormat('dd/MM/yyyy');
+                final String formattedDate;
+                if (workout.date != null) {
+                  formattedDate = dateFormatter.format(workout.date as DateTime);
+                } else {
+                  formattedDate = '';
                 }
                 return Card(
                   child: Padding(
@@ -109,7 +123,7 @@ class _WorkoutHistoryScreenState extends State<WorkoutHistoryScreen> {
                                     ),
                                   ),
                                   Text(
-                                    workout.date,
+                                    formattedDate,
                                     softWrap: false,
                                     style: const TextStyle(
                                         fontSize: 13,
@@ -118,7 +132,8 @@ class _WorkoutHistoryScreenState extends State<WorkoutHistoryScreen> {
                                 ],
                               )),
                               IconButton(
-                                onPressed: () => _onWorkoutDeletePressed(workout),
+                                onPressed: () =>
+                                    _onWorkoutDeletePressed(workout),
                                 icon: const Icon(Icons.close),
                                 iconSize: 18,
                               ),
@@ -126,7 +141,8 @@ class _WorkoutHistoryScreenState extends State<WorkoutHistoryScreen> {
                           ),
                           Padding(
                             padding: const EdgeInsets.all(8.0),
-                            child: Text(exercises.map((e) => e.name).join(', ')),
+                            child:
+                                Text(exercises.map((e) => e.name).join(', ')),
                           ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.end,

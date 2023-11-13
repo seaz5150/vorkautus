@@ -41,7 +41,6 @@ class _RootScreenState extends State<RootScreen> {
   @override
   void initState() {
     super.initState();
-    globals.repository.loadDataFromJson();
     globals.rerenderMain = setState;
   }
 

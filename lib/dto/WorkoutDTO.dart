@@ -7,7 +7,7 @@ class WorkoutDTO {
   String name = '';
   List<String> exerciseIds = [];
   bool finished = false;
-  String date = '';
+  DateTime? date;
 
   WorkoutDTO(this.id, this.name, this.exerciseIds, this.finished, this.date);
 

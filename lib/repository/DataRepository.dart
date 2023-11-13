@@ -41,6 +41,7 @@ class DataRepository {
   ExerciseDTO? getExerciseById(String id) {
     List<ExerciseDTO> exercises = getExercisesFromJson();
     try {
+      print(exercises.map((e) => e.id));
       return exercises.firstWhere((e) => e.id == id);
     } on StateError {
       return null;
@@ -49,8 +50,12 @@ class DataRepository {
 
   bool saveExercise(ExerciseDTO ex) {
     try {
-      ex.id == uuid.v4();
-      _data.exercises.add(ex);
+      if (ex.id == '') {
+        ex.id = uuid.v4();
+      }
+      if (!_data.exercises.contains(ex)) {
+        _data.exercises.add(ex);
+      }
     } catch (e) {
       return false;
     }
@@ -79,8 +84,12 @@ class DataRepository {
 
   bool saveExerciseTemplate(ExerciseTemplateDTO exT) {
     try {
-      exT.id == uuid.v4();
-      _data.templates.add(exT);
+      if (exT.id == '') {
+        exT.id = uuid.v4();
+      }
+      if (!_data.templates.contains(exT)) {
+        _data.templates.add(exT);
+      }
     } catch (e) {
       return false;
     }
@@ -123,8 +132,12 @@ class DataRepository {
 
   bool saveQuestion(QuestionDTO question) {
     try {
-      question.id == uuid.v4();
-      _data.questions.add(question);
+      if (question.id == '') {
+        question.id = uuid.v4();
+      }
+      if (!_data.questions.contains(question)) {
+        _data.questions.add(question);
+      }
     } catch (e) {
       return false;
     }
@@ -153,8 +166,12 @@ class DataRepository {
 
   bool saveSet(SetDTO set) {
     try {
-      set.id == uuid.v4();
-      _data.sets.add(set);
+      if (set.id == '') {
+        set.id = uuid.v4();
+      }
+      if (!_data.sets.contains(set)) {
+        _data.sets.add(set);
+      }
     } catch (e) {
       return false;
     }
@@ -183,8 +200,12 @@ class DataRepository {
 
   bool saveWorkout(WorkoutDTO wo) {
     try {
-      wo.id == uuid.v4();
-      _data.workouts.add(wo);
+      if (wo.id == '') {
+        wo.id == uuid.v4();
+      }
+      if (!_data.workouts.contains(wo)) {
+        _data.workouts.add(wo);
+      }
     } catch (e) {
       return false;
     }
@@ -196,8 +217,9 @@ class DataRepository {
   }
 
   String saveObject(dynamic obj) {
+    print("Saving");
+    print(obj);
     bool isSaveOK = false;
-    obj.id == uuid.v4();
 
     if (obj is ExerciseDTO) {
       isSaveOK = saveExercise(obj);
@@ -254,21 +276,33 @@ class DataRepository {
       data = json.decode(content);
     }
     if (data is! Map<String,dynamic>) {
+      final String ex1Id = uuid.v4();
+      final String ex2Id = uuid.v4();
+      final String ex3Id = uuid.v4();
+      final String temp1Id = uuid.v4();
+      final String temp2Id = uuid.v4();
+      final String temp3Id = uuid.v4();
+      final String set1Id = uuid.v4();
+      final String set2Id = uuid.v4();
+      final String set3Id = uuid.v4();
+      final String set4Id = uuid.v4();
+      final String set5Id = uuid.v4();
+      final String set6Id = uuid.v4();
       // Demo data
       _data = DataDTO([
-        WorkoutDTO(uuid.v4(), "My Workout #1", [uuid.v4(), uuid.v4()], true, '2023-11-08'),
-        WorkoutDTO(uuid.v4(), "My Workout #2", [uuid.v4(), uuid.v4()], false, '2023-11-15'),
+        WorkoutDTO(uuid.v4(), "My Workout #1", [ex1Id, ex2Id], true, DateTime.tryParse('2023-11-08')),
+        WorkoutDTO(uuid.v4(), "My Workout #2", [ex2Id, ex3Id], false, DateTime.tryParse('2023-11-15')),
       ], [
-        ExerciseDTO(uuid.v4(), "Overhead press", uuid.v4(), 20, [uuid.v4(), uuid.v4()]),
-        ExerciseDTO(uuid.v4(), "Arnold press", uuid.v4(), 20, [uuid.v4(), uuid.v4()]),
-        ExerciseDTO(uuid.v4(), "Leg curl", uuid.v4(), 20, [uuid.v4(), uuid.v4()]),
+        ExerciseDTO(ex1Id, "Overhead press", temp1Id, 20, [set1Id, set2Id]),
+        ExerciseDTO(ex2Id, "Arnold press", temp2Id, 20, [set3Id, set4Id]),
+        ExerciseDTO(ex3Id, "Leg curl", temp3Id, 20, [set5Id, set6Id]),
       ], [
-        SetDTO(uuid.v4(), 10, 5, 5),
-        SetDTO(uuid.v4(), 10, 5, 5),
-        SetDTO(uuid.v4(), 10, 5, 5),
-        SetDTO(uuid.v4(), 10, 5, 5),
-        SetDTO(uuid.v4(), 10, 5, 5),
-        SetDTO(uuid.v4(), 10, 5, 5),
+        SetDTO(set1Id, 10, 5, 5),
+        SetDTO(set2Id, 10, 5, 5),
+        SetDTO(set3Id, 10, 5, 5),
+        SetDTO(set4Id, 10, 5, 5),
+        SetDTO(set5Id, 10, 5, 5),
+        SetDTO(set6Id, 10, 5, 5),
       ], [
         QuestionDTO(uuid.v4(), 'What is 2 + 2?', 0, '4', ['3', '5', '6']),
         QuestionDTO(uuid.v4(), 'How long would it take to finish 1 hour workout?', 0, '60 minutes', ['30 minutes', '10 ', '45 mintues']),
@@ -285,9 +319,9 @@ class DataRepository {
         QuestionDTO(uuid.v4(), 'When aiming for fat loss, what is the typical duration for a high-intensity interval training (HIIT) session?', 0, '20-30 minutes', ['10 minutes', '45 minutes', '60 minutes']),
         QuestionDTO(uuid.v4(), 'What is the recommended frequency of strength training sessions per week for optimal results?', 0, '2-3 times', ['1 time', '5 times', '7 times']),
       ], [
-        ExerciseTemplateDTO(uuid.v4(), "Overhead press"),
-        ExerciseTemplateDTO(uuid.v4(), "Arnold press"),
-        ExerciseTemplateDTO(uuid.v4(), "Leg curl"),
+        ExerciseTemplateDTO(temp1Id, "Overhead press"),
+        ExerciseTemplateDTO(temp2Id, "Arnold press"),
+        ExerciseTemplateDTO(temp3Id, "Leg curl"),
       ]);
       _dataLoaded = true;
       return _data;
