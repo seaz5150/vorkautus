@@ -3,11 +3,12 @@ part 'SetDTO.g.dart';
 
 @JsonSerializable()
 class SetDTO {
-  String id;
-  double weight;
-  int reps;
-  int timeOfSet;
+  String id = '';
+  double weight = 0.0;
+  int reps = 0;
+  int timeOfSet = 0;
 
+  SetDTO.empty();
   SetDTO(this.id, this.weight, this.reps, this.timeOfSet);
 
   factory SetDTO.fromJson(Map<String, dynamic> json) =>

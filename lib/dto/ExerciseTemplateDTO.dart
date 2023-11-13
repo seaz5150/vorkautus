@@ -4,9 +4,10 @@ part 'ExerciseTemplateDTO.g.dart';
 
 @JsonSerializable()
 class ExerciseTemplateDTO {
-  String id;
-  String name;
+  String id = '';
+  String name = '';
 
+  ExerciseTemplateDTO.empty();
   ExerciseTemplateDTO(this.id, this.name);
 
   factory ExerciseTemplateDTO.fromJson(Map<String, dynamic> json) =>

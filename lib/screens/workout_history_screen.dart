@@ -83,17 +83,7 @@ class _WorkoutHistoryScreenState extends State<WorkoutHistoryScreen> {
               itemCount: workouts.length,
               itemBuilder: (context, index) {
                 WorkoutDTO workout = workouts[index];
-                List<ExerciseDTO> exercises = [];
-                for (String id in workout.exerciseIds) {
-                  print(id);
-                  ExerciseDTO? exercise = globals.repository.getExerciseById(id);
-                  if (exercise != null) {
-                    exercises.add(exercise);
-                  }
-                }
-                print(workout);
-                print(workout.exerciseIds);
-                print(exercises);
+                List<ExerciseDTO> exercises = workout.getExercises();
                 final DateFormat dateFormatter = DateFormat('dd/MM/yyyy');
                 final String formattedDate;
                 if (workout.date != null) {
