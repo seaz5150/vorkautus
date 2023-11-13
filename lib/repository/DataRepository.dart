@@ -272,6 +272,18 @@ class DataRepository {
       ], [
         QuestionDTO(uuid.v4(), 'What is 2 + 2?', 0, '4', ['3', '5', '6']),
         QuestionDTO(uuid.v4(), 'How long would it take to finish 1 hour workout?', 0, '60 minutes', ['30 minutes', '10 ', '45 mintues']),
+        QuestionDTO(uuid.v4(), 'What is the recommended duration for a standard workout session?', 0, '60 minutes', ['30 minutes', '10 minutes', '45 minutes']),
+        QuestionDTO(uuid.v4(), 'How much time should be dedicated to a workout for optimal results?', 0, '60 minutes', ['45 minutes', '30 minutes', '15 minutes']),
+        QuestionDTO(uuid.v4(), 'In terms of duration, what is the commonly suggested timeframe for a comprehensive workout?', 0, '60 minutes', ['20 minutes', '45 minutes', '30 minutes']),
+        QuestionDTO(uuid.v4(), 'For a complete workout, what is the ideal time commitment?', 0, '60 minutes', ['40 minutes', '15 minutes', '50 minutes']),
+        QuestionDTO(uuid.v4(), 'What is the standard length for an effective workout session?', 0, '60 minutes', ['25 minutes', '40 minutes', '55 minutes']),
+        QuestionDTO(uuid.v4(), 'What is the recommended number of repetitions per set for muscle building?', 0, '8-12 reps', ['5 reps', '15 reps', '20 reps']),
+        QuestionDTO(uuid.v4(), 'How many sets are typically recommended for a strength-focused workout?', 0, '3-5 sets', ['1 set', '8 sets', '10 sets']),
+        QuestionDTO(uuid.v4(), 'For endurance training, what is the suggested range for repetitions per set?', 0, '15-20 reps', ['10 reps', '25 reps', '30 reps']),
+        QuestionDTO(uuid.v4(), 'What is the general guideline for rest intervals between sets during weightlifting?', 0, '60-90 seconds', ['30 seconds', '2 minutes', '45 seconds']),
+        QuestionDTO(uuid.v4(), 'After a workout, how much protein is commonly recommended for muscle recovery?', 0, '20-30 grams', ['10 grams', '40 grams', '15 grams']),
+        QuestionDTO(uuid.v4(), 'When aiming for fat loss, what is the typical duration for a high-intensity interval training (HIIT) session?', 0, '20-30 minutes', ['10 minutes', '45 minutes', '60 minutes']),
+        QuestionDTO(uuid.v4(), 'What is the recommended frequency of strength training sessions per week for optimal results?', 0, '2-3 times', ['1 time', '5 times', '7 times']),
       ], [
         ExerciseTemplateDTO(uuid.v4(), "Overhead press"),
         ExerciseTemplateDTO(uuid.v4(), "Arnold press"),
