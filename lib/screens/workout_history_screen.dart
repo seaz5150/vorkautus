@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:vorkautus/dto/ExerciseDTO.dart';
 import 'package:vorkautus/dto/WorkoutDTO.dart';
+import 'package:vorkautus/widgets/workout_exercise_summary.dart';
+
 import '../globals.dart' as globals;
 
 class WorkoutHistoryScreen extends StatefulWidget {
@@ -43,7 +45,62 @@ class _WorkoutHistoryScreenState extends State<WorkoutHistoryScreen> {
   }
 
   void _onWorkoutDetailsPressed(WorkoutDTO workout) {
-    // TODO: Show detail
+    final List<ExerciseDTO> exercises = workout.getExercises();
+
+    final DateFormat dateFormatter = DateFormat('dd/MM/yyyy');
+    final String formattedDate;
+    if (workout.date != null) {
+      formattedDate = dateFormatter.format(workout.date as DateTime);
+    } else {
+      formattedDate = '';
+    }
+
+    showModalBottomSheet(
+        context: context,
+        elevation: 10,
+        showDragHandle: true,
+        // Make it full height
+        isScrollControlled: true,
+        constraints: BoxConstraints(
+            maxHeight: MediaQuery.of(context).size.height -
+                MediaQuery.of(context).padding.bottom -
+                MediaQuery.of(context).padding.top),
+        // Content
+        builder: (context) => Container(
+            alignment: Alignment.center,
+            child: Padding(
+              padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      workout.name,
+                      style: const TextStyle(
+                          fontWeight: FontWeight.bold, fontSize: 18),
+                    ),
+                  ),
+                  if (formattedDate != '')
+                    Padding(
+                      padding: const EdgeInsets.all(4.0),
+                      child: Text(
+                        formattedDate,
+                        style: const TextStyle(
+                            fontWeight: FontWeight.w500, fontSize: 14),
+                      ),
+                    ),
+                  Expanded(
+                      child: ListView.builder(
+                          scrollDirection: Axis.vertical,
+                          itemCount: exercises.length,
+                          itemBuilder: (context, index) {
+                            return WorkoutExerciseSummary(
+                              exercise: exercises[index],
+                            );
+                          }))
+                ],
+              ),
+            )));
   }
 
   void _onWorkoutStartPressed(WorkoutDTO workout) {
@@ -87,7 +144,8 @@ class _WorkoutHistoryScreenState extends State<WorkoutHistoryScreen> {
                 final DateFormat dateFormatter = DateFormat('dd/MM/yyyy');
                 final String formattedDate;
                 if (workout.date != null) {
-                  formattedDate = dateFormatter.format(workout.date as DateTime);
+                  formattedDate =
+                      dateFormatter.format(workout.date as DateTime);
                 } else {
                   formattedDate = '';
                 }
@@ -131,8 +189,10 @@ class _WorkoutHistoryScreenState extends State<WorkoutHistoryScreen> {
                           ),
                           Padding(
                             padding: const EdgeInsets.all(8.0),
-                            child:
-                                Text(exercises.map((e) => e.name).join(', ')),
+                            child: Text(
+                              exercises.map((e) => e.name).join(', '),
+                              softWrap: true,
+                            ),
                           ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.end,

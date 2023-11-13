@@ -279,23 +279,30 @@ class DataRepository {
       final String ex1Id = uuid.v4();
       final String ex2Id = uuid.v4();
       final String ex3Id = uuid.v4();
+      final String ex4Id = uuid.v4();
       final String temp1Id = uuid.v4();
       final String temp2Id = uuid.v4();
       final String temp3Id = uuid.v4();
+      final String temp4Id = uuid.v4();
       final String set1Id = uuid.v4();
       final String set2Id = uuid.v4();
       final String set3Id = uuid.v4();
       final String set4Id = uuid.v4();
       final String set5Id = uuid.v4();
       final String set6Id = uuid.v4();
+      final String set7Id = uuid.v4();
+      final String set8Id = uuid.v4();
+      final String set9Id = uuid.v4();
       // Demo data
       _data = DataDTO([
         WorkoutDTO(uuid.v4(), "My Workout #1", [ex1Id, ex2Id], true, DateTime.tryParse('2023-11-08')),
         WorkoutDTO(uuid.v4(), "My Workout #2", [ex2Id, ex3Id], false, DateTime.tryParse('2023-11-15')),
+        WorkoutDTO(uuid.v4(), "My Workout #3", [ex1Id, ex2Id, ex3Id, ex4Id], false, DateTime.tryParse('2023-11-18')),
       ], [
-        ExerciseDTO(ex1Id, "Overhead press", temp1Id, 20, [set1Id, set2Id]),
-        ExerciseDTO(ex2Id, "Arnold press", temp2Id, 20, [set3Id, set4Id]),
-        ExerciseDTO(ex3Id, "Leg curl", temp3Id, 20, [set5Id, set6Id]),
+        ExerciseDTO(ex1Id, "Overhead press", temp1Id, 60, 20, [set1Id, set2Id], true),
+        ExerciseDTO(ex2Id, "Arnold press", temp2Id, 60, 20, [set3Id, set4Id], true),
+        ExerciseDTO(ex3Id, "Leg curl", temp3Id, 90, 10, [set5Id, set6Id], true),
+        ExerciseDTO(ex4Id, "Push up", temp3Id, 120, 20, [set7Id, set8Id, set9Id], true),
       ], [
         SetDTO(set1Id, 10, 5, 5),
         SetDTO(set2Id, 10, 5, 5),
@@ -303,6 +310,9 @@ class DataRepository {
         SetDTO(set4Id, 10, 5, 5),
         SetDTO(set5Id, 10, 5, 5),
         SetDTO(set6Id, 10, 5, 5),
+        SetDTO(set7Id, 0, 10, 20),
+        SetDTO(set8Id, 0, 20, 40),
+        SetDTO(set9Id, 0, 30, 60),
       ], [
         QuestionDTO(uuid.v4(), 'What is 2 + 2?', 0, '4', ['3', '5', '6']),
         QuestionDTO(uuid.v4(), 'How long would it take to finish 1 hour workout?', 0, '60 minutes', ['30 minutes', '10 ', '45 mintues']),
@@ -322,6 +332,7 @@ class DataRepository {
         ExerciseTemplateDTO(temp1Id, "Overhead press"),
         ExerciseTemplateDTO(temp2Id, "Arnold press"),
         ExerciseTemplateDTO(temp3Id, "Leg curl"),
+        ExerciseTemplateDTO(temp4Id, "Push up"),
       ]);
       _dataLoaded = true;
       return _data;

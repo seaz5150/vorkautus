@@ -8,9 +8,10 @@ import 'package:vorkautus/dto/SetDTO.dart';
 import 'package:vorkautus/dto/WorkoutDTO.dart';
 import 'package:vorkautus/widgets/quiz_widget.dart';
 import 'package:vorkautus/widgets/workout_exercise_card.dart';
+
 import '../globals.dart' as globals;
-import '../utilities/misc_utilities.dart';
 import '../state_tracking.dart';
+import '../utilities/misc_utilities.dart';
 
 class WorkoutScreen extends StatefulWidget {
   const WorkoutScreen({super.key});
@@ -290,11 +291,8 @@ class _WorkoutScreenState extends State<WorkoutScreen>
             TextButton(
               child: const Text('Confirm'),
               onPressed: () {
-                exercises.add(ExerciseDTO(
-                    globals.repository.uuid.v4(),
-                    selectedExerciseTemplate!.name,
-                    selectedExerciseTemplate!.id,
-                    60, []));
+                exercises.add(ExerciseDTO.fresh(selectedExerciseTemplate!.name,
+                    selectedExerciseTemplate!.id, 60));
                 Navigator.of(context).pop();
               },
             ),
@@ -362,7 +360,7 @@ class _WorkoutScreenState extends State<WorkoutScreen>
               ),
             ),
             Expanded(
-               child: _getQuizScreen(),
+              child: _getQuizScreen(),
             ),
           ],
         ),
@@ -491,7 +489,8 @@ class _WorkoutScreenState extends State<WorkoutScreen>
           ],
         ));
   }
-    Widget _getQuizScreen() {
-      return QuizSubview();
-    }
+
+  Widget _getQuizScreen() {
+    return QuizSubview();
+  }
 }

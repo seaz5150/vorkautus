@@ -10,11 +10,11 @@ ExerciseDTO _$ExerciseDTOFromJson(Map<String, dynamic> json) => ExerciseDTO(
       json['id'] as String,
       json['name'] as String,
       json['exerciseTemplateId'] as String,
+      json['totalTime'] as int,
       json['pauseTime'] as int,
       (json['setIds'] as List<dynamic>).map((e) => e as String).toList(),
-    )
-      ..completed = json['completed'] as bool
-      ..totalTime = json['totalTime'] as int;
+      json['completed'] as bool,
+    );
 
 Map<String, dynamic> _$ExerciseDTOToJson(ExerciseDTO instance) =>
     <String, dynamic>{

@@ -1,6 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:vorkautus/dto/ExerciseTemplateDTO.dart';
 import 'package:vorkautus/dto/SetDTO.dart';
+
 import '../globals.dart' as globals;
 
 part 'ExerciseDTO.g.dart';
@@ -19,7 +20,11 @@ class ExerciseDTO {
   ExerciseTemplateDTO? _exerciseTemplate;
 
   ExerciseDTO.empty();
-  ExerciseDTO(this.id, this.name, this.exerciseTemplateId, this.pauseTime, this.setIds);
+
+  ExerciseDTO.fresh(this.name, this.exerciseTemplateId, this.pauseTime);
+
+  ExerciseDTO(this.id, this.name, this.exerciseTemplateId, this.totalTime,
+      this.pauseTime, this.setIds, this.completed);
 
   factory ExerciseDTO.fromJson(Map<String, dynamic> json) =>
       _$ExerciseDTOFromJson(json);
@@ -27,7 +32,8 @@ class ExerciseDTO {
   Map<String, dynamic> toJson() => _$ExerciseDTOToJson(this);
 
   ExerciseTemplateDTO? getExerciseTemplate() {
-    _exerciseTemplate ??= globals.repository.getExerciseTemplateById(exerciseTemplateId);
+    _exerciseTemplate ??=
+        globals.repository.getExerciseTemplateById(exerciseTemplateId);
     return _exerciseTemplate;
   }
 
