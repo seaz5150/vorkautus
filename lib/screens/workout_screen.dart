@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -167,7 +168,8 @@ class _WorkoutScreenState extends State<WorkoutScreen>
   void _addTimeToRest() {
     setState(() {
       setRestDuration = Duration(seconds: setRestDuration.inSeconds + 1);
-      exerciseRestDuration = Duration(seconds: exerciseRestDuration.inSeconds + 1);
+      exerciseRestDuration =
+          Duration(seconds: exerciseRestDuration.inSeconds + 1);
     });
   }
 
@@ -181,15 +183,14 @@ class _WorkoutScreenState extends State<WorkoutScreen>
         return AlertDialog(
           title: const Text('Workout name'),
           content: TextField(
-                  controller: workoutNameTextFieldController,
-                  onChanged: (String value) async {
-                    workout.name = value;
-                  },
-                  textAlignVertical: TextAlignVertical.center,
-                  decoration: const InputDecoration(
-                      labelText: "Workout name",
-                      labelStyle: TextStyle(fontSize: 13)),
-                  keyboardType: TextInputType.text,
+            controller: workoutNameTextFieldController,
+            onChanged: (String value) async {
+              workout.name = value;
+            },
+            textAlignVertical: TextAlignVertical.center,
+            decoration: const InputDecoration(
+                labelText: "Workout name", labelStyle: TextStyle(fontSize: 13)),
+            keyboardType: TextInputType.text,
           ),
           actions: <Widget>[
             TextButton(
@@ -209,8 +210,8 @@ class _WorkoutScreenState extends State<WorkoutScreen>
       activeSet?.timeOfSet = setDuration.inSeconds;
       setTimer?.cancel();
       setDuration = Duration.zero;
-      setRestTimer = Timer.periodic(
-          const Duration(seconds: 1), (_) => _addTimeToRest());
+      setRestTimer =
+          Timer.periodic(const Duration(seconds: 1), (_) => _addTimeToRest());
       exerciseSetActive = false;
       exerciseRestActive = true;
     });
@@ -226,7 +227,8 @@ class _WorkoutScreenState extends State<WorkoutScreen>
       globals.rerenderMain!(() {});
       setRestTimer?.cancel();
       setRestDuration = Duration.zero;
-      setTimer = Timer.periodic(const Duration(seconds: 1), (_) => _addTimeToSet());
+      setTimer =
+          Timer.periodic(const Duration(seconds: 1), (_) => _addTimeToSet());
     });
   }
 
@@ -308,7 +310,8 @@ class _WorkoutScreenState extends State<WorkoutScreen>
       activeExercise = exercises[index];
       exerciseTimer?.cancel();
       exerciseDuration = Duration.zero;
-      setTimer = Timer.periodic(const Duration(seconds: 1), (_) => _addTimeToExercise());
+      setTimer = Timer.periodic(
+          const Duration(seconds: 1), (_) => _addTimeToExercise());
       _beginNextSet();
     });
   }
@@ -348,8 +351,7 @@ class _WorkoutScreenState extends State<WorkoutScreen>
                     globals.repository.uuid.v4(),
                     selectedExerciseTemplate!.name,
                     selectedExerciseTemplate!.id,
-                    60
-                );
+                    60);
                 exercises.add(exercise);
                 workout.addExercise(exercise);
                 Navigator.of(context).pop();
@@ -375,122 +377,111 @@ class _WorkoutScreenState extends State<WorkoutScreen>
   Widget _getSetRestScreen(BuildContext context) {
     return Scaffold(
         body: Container(
-          alignment: Alignment.topCenter,
-        child: Column(
-          children: [
-            const Text("Rest",
-                style: TextStyle(fontWeight: FontWeight.w500, fontSize: 35)),
-            Text(
-                "${activeExercise!.name}, set #${activeExerciseSets.indexOf(activeSet!) + 1}",
-                style: const TextStyle(
+      alignment: Alignment.topCenter,
+      child: Column(
+        children: [
+          const Text("Rest",
+              style: TextStyle(fontWeight: FontWeight.w500, fontSize: 35)),
+          Text(
+              "${activeExercise!.name}, set #${activeExerciseSets.indexOf(activeSet!) + 1}",
+              style: const TextStyle(
+                  fontWeight: FontWeight.w500,
+                  fontSize: 25,
+                  color: Color.fromARGB(198, 52, 52, 52))),
+          const Padding(
+            padding: EdgeInsets.only(top: 20.0),
+            child: Text("Remaining time",
+                style: TextStyle(
                     fontWeight: FontWeight.w500,
-                    fontSize: 25,
+                    fontSize: 20,
                     color: Color.fromARGB(198, 52, 52, 52))),
-            const Padding(
-              padding: EdgeInsets.only(top: 20.0),
-              child: Text("Remaining time",
-                  style: TextStyle(
-                      fontWeight: FontWeight.w500,
-                      fontSize: 20,
-                      color: Color.fromARGB(198, 52, 52, 52))),
-            ),
-            Text(
-                getFormattedTime(Duration(
-                    seconds:
-                        activeExercise!.pauseTime - setRestDuration.inSeconds)),
-                style: const TextStyle(
-                    fontWeight: FontWeight.w500,
-                    fontSize: 50,
-                    color: Color.fromARGB(255, 102, 147, 58))),
-            Padding(
-              padding: const EdgeInsets.only(top: 20.0, bottom: 20.0),
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color.fromARGB(255, 102, 147, 58),
-                ),
-                onPressed: () => _beginNextSet(),
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                      'BEGIN SET #${activeExerciseSets.indexOf(activeSet!) + 2}',
-                      style: const TextStyle(color: Colors.white)),
-                ),
+          ),
+          Text(
+              getFormattedTime(Duration(
+                  seconds: max(0,
+                      activeExercise!.pauseTime - setRestDuration.inSeconds))),
+              style: const TextStyle(
+                  fontWeight: FontWeight.w500,
+                  fontSize: 50,
+                  color: Color.fromARGB(255, 102, 147, 58))),
+          Padding(
+            padding: const EdgeInsets.only(top: 20.0, bottom: 20.0),
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color.fromARGB(255, 102, 147, 58),
+              ),
+              onPressed: () => _beginNextSet(),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                    'BEGIN SET #${activeExerciseSets.indexOf(activeSet!) + 2}',
+                    style: const TextStyle(color: Colors.white)),
               ),
             ),
-            Expanded(
-              child: _getQuizScreen(),
-            ),
-          ],
-        ),
+          ),
+          Expanded(
+            child: _getQuizScreen(),
+          ),
+        ],
+      ),
     ));
   }
 
   Widget _getActiveSetScreen(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-      title: Column(
-        children: [
-          Text(activeExercise!.name,
-              style:
-              const TextStyle(fontWeight: FontWeight.w500, fontSize: 35))
-        ],
-      ),
-    ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-        floatingActionButton: Container(
-          padding: const EdgeInsets.only(left: 32, right: 32),
-          width: double.infinity,
-          height: 30,
-          child: FloatingActionButton(
-            backgroundColor: const Color.fromARGB(255, 102, 147, 58),
-            onPressed: _onNewExercisePressed,
-            child: const Icon(Icons.add, color: Colors.white),
+          title: Column(
+            children: [
+              Text(activeExercise!.name,
+                  style: const TextStyle(
+                      fontWeight: FontWeight.w500, fontSize: 35))
+            ],
           ),
         ),
         body: Container(
           alignment: Alignment.topCenter,
-        child: Column(
-          children: [
-            Text("Set #${activeExerciseSets.indexOf(activeSet!) + 1}",
-                style: const TextStyle(
-                    fontWeight: FontWeight.w500,
-                    fontSize: 25,
-                    color: Color.fromARGB(198, 52, 52, 52))),
-            const Padding(
-              padding: EdgeInsets.only(top: 16.0, bottom: 16.0),
-              child: Image(
-                image: AssetImage('assets/vorkautus.png'),
-                width: 80,
-              ),
-            ),
-            const Text("Time duration",
-                style: TextStyle(
-                    fontWeight: FontWeight.w500,
-                    fontSize: 20,
-                    color: Color.fromARGB(198, 52, 52, 52))),
-            Text(getFormattedTime(setDuration),
-                style: const TextStyle(
-                    fontWeight: FontWeight.w500,
-                    fontSize: 50,
-                    color: Color.fromARGB(255, 102, 147, 58))),
-            Padding(
-              padding: const EdgeInsets.only(top: 40.0),
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color.fromARGB(255, 102, 147, 58),
-                ),
-                onPressed: () =>
-                    _openPromptForWeight(_onRestAndAddSetAndWeightEntered),
-                child: const Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: Text('REST AND ADD SET',
-                      style: TextStyle(color: Colors.white)),
+          child: Column(
+            children: [
+              Text("Set #${activeExerciseSets.indexOf(activeSet!) + 1}",
+                  style: const TextStyle(
+                      fontWeight: FontWeight.w500,
+                      fontSize: 25,
+                      color: Color.fromARGB(198, 52, 52, 52))),
+              const Padding(
+                padding: EdgeInsets.only(top: 16.0, bottom: 16.0),
+                child: Image(
+                  image: AssetImage('assets/vorkautus.png'),
+                  width: 80,
                 ),
               ),
-            )
-          ],
-        ),
-    ));
+              const Text("Time duration",
+                  style: TextStyle(
+                      fontWeight: FontWeight.w500,
+                      fontSize: 20,
+                      color: Color.fromARGB(198, 52, 52, 52))),
+              Text(getFormattedTime(setDuration),
+                  style: const TextStyle(
+                      fontWeight: FontWeight.w500,
+                      fontSize: 50,
+                      color: Color.fromARGB(255, 102, 147, 58))),
+              Padding(
+                padding: const EdgeInsets.only(top: 40.0),
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color.fromARGB(255, 102, 147, 58),
+                  ),
+                  onPressed: () =>
+                      _openPromptForWeight(_onRestAndAddSetAndWeightEntered),
+                  child: const Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Text('REST AND ADD SET',
+                        style: TextStyle(color: Colors.white)),
+                  ),
+                ),
+              )
+            ],
+          ),
+        ));
   }
 
   Widget _getSummaryScreen(BuildContext context) {

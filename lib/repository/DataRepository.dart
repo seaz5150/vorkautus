@@ -281,7 +281,7 @@ class DataRepository {
     if (content.isNotEmpty) {
       data = json.decode(content);
     }
-    if (data is! Map<String,dynamic> || true) {
+    if (data is! Map<String,dynamic>) {
       final String ex1Id = uuid.v4();
       final String ex2Id = uuid.v4();
       final String ex3Id = uuid.v4();
@@ -301,9 +301,9 @@ class DataRepository {
       final String set9Id = uuid.v4();
       // Demo data
       _data = DataDTO([
-        WorkoutDTO(uuid.v4(), "My Workout #1", [ex1Id, ex2Id], true, DateTime.tryParse('2023-11-08')),
-        WorkoutDTO(uuid.v4(), "My Workout #2", [ex2Id, ex3Id], false, DateTime.tryParse('2023-11-15')),
-        WorkoutDTO(uuid.v4(), "My Workout #3", [ex1Id, ex2Id, ex3Id, ex4Id], false, DateTime.tryParse('2023-11-18')),
+        WorkoutDTO(uuid.v4(), "My afternoon workout", [ex1Id, ex2Id], true, DateTime.tryParse('2023-11-08')),
+        WorkoutDTO(uuid.v4(), "Short workout", [ex2Id, ex3Id], true, DateTime.tryParse('2023-11-15')),
+        WorkoutDTO(uuid.v4(), "Morning workout", [ex1Id, ex2Id, ex3Id, ex4Id], true, DateTime.tryParse('2023-11-18')),
       ], [
         ExerciseDTO(ex1Id, "Overhead press", temp1Id, 60, 20, [set1Id, set2Id], true),
         ExerciseDTO(ex2Id, "Arnold press", temp2Id, 60, 20, [set3Id, set4Id], true),
