@@ -56,6 +56,9 @@ class DataRepository {
       if (!_data.exercises.contains(ex)) {
         _data.exercises.add(ex);
       }
+      for (final set in ex.getSets()) {
+        saveObject(set);
+      }
     } catch (e) {
       return false;
     }
@@ -206,6 +209,9 @@ class DataRepository {
       if (!_data.workouts.contains(wo)) {
         _data.workouts.add(wo);
       }
+      for (final exercise in wo.getExercises()) {
+        saveObject(exercise);
+      }
     } catch (e) {
       return false;
     }
@@ -275,7 +281,7 @@ class DataRepository {
     if (content.isNotEmpty) {
       data = json.decode(content);
     }
-    if (data is! Map<String,dynamic>) {
+    if (data is! Map<String,dynamic> || true) {
       final String ex1Id = uuid.v4();
       final String ex2Id = uuid.v4();
       final String ex3Id = uuid.v4();

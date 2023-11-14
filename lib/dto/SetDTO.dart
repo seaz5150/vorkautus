@@ -9,6 +9,7 @@ class SetDTO {
   int timeOfSet = 0;
 
   SetDTO.empty();
+  SetDTO.withId(this.id);
   SetDTO(this.id, this.weight, this.reps, this.timeOfSet);
 
   factory SetDTO.fromJson(Map<String, dynamic> json) =>

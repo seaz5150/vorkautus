@@ -27,7 +27,7 @@ class _WorkoutScreenState extends State<WorkoutScreen>
   ExerciseTemplateDTO? selectedExerciseTemplate;
   Timer? workoutTimer;
   Duration workoutDuration = Duration.zero;
-  WorkoutDTO workout = WorkoutDTO(globals.repository.uuid.v4(), "My Workout #1",
+  WorkoutDTO workout = WorkoutDTO(globals.repository.uuid.v4(), "New workout",
       <String>[], false, DateTime.now());
   bool exerciseRestActive = false;
   bool exerciseSetActive = false;
@@ -35,9 +35,12 @@ class _WorkoutScreenState extends State<WorkoutScreen>
   List<SetDTO> activeExerciseSets = [];
   SetDTO? activeSet;
   Timer? setTimer;
+  Timer? exerciseTimer;
   Duration setDuration = Duration.zero;
+  Duration exerciseDuration = Duration.zero;
   Timer? setRestTimer;
   Duration setRestDuration = Duration.zero;
+  Duration exerciseRestDuration = Duration.zero;
   TextEditingController? repCountTextFieldController;
   TextEditingController? weightTextFieldController;
 
@@ -88,7 +91,6 @@ class _WorkoutScreenState extends State<WorkoutScreen>
 
   void _finishWorkout() {
     if (mounted) {
-      workout.exerciseIds = exercises.map((e) => e.id).toList();
       workout.finished = true;
       globals.repository.saveObject(workout);
     }
@@ -110,6 +112,11 @@ class _WorkoutScreenState extends State<WorkoutScreen>
         activeExercise?.setIds = activeExerciseSets.map((s) => s.id).toList();
         activeExercise?.completed = true;
         globals.repository.saveObject(activeExercise);
+
+        exerciseTimer?.cancel();
+        exerciseTimer = null;
+        activeExercise?.totalTime = exerciseDuration.inSeconds;
+        activeExercise?.pauseTime = exerciseRestDuration.inSeconds;
 
         activeExercise = null;
         activeExerciseSets = [];
@@ -150,9 +157,16 @@ class _WorkoutScreenState extends State<WorkoutScreen>
     });
   }
 
-  void _addTimeToSetRest() {
+  void _addTimeToExercise() {
+    setState(() {
+      exerciseDuration = Duration(seconds: exerciseDuration.inSeconds + 1);
+    });
+  }
+
+  void _addTimeToRest() {
     setState(() {
       setRestDuration = Duration(seconds: setRestDuration.inSeconds + 1);
+      exerciseRestDuration = Duration(seconds: exerciseRestDuration.inSeconds + 1);
     });
   }
 
@@ -164,7 +178,7 @@ class _WorkoutScreenState extends State<WorkoutScreen>
       setTimer?.cancel();
       setDuration = Duration.zero;
       setRestTimer = Timer.periodic(
-          const Duration(seconds: 1), (_) => _addTimeToSetRest());
+          const Duration(seconds: 1), (_) => _addTimeToRest());
       exerciseSetActive = false;
       exerciseRestActive = true;
     });
@@ -174,13 +188,13 @@ class _WorkoutScreenState extends State<WorkoutScreen>
     setState(() {
       exerciseRestActive = false;
       exerciseSetActive = true;
-      activeSet = SetDTO(globals.repository.uuid.v4(), 0, 0, 0);
+      activeSet = SetDTO.withId(globals.repository.uuid.v4());
+      activeExercise?.addSet(activeSet!);
       activeExerciseSets.add(activeSet!);
       globals.rerenderMain!(() {});
       setRestTimer?.cancel();
       setRestDuration = Duration.zero;
-      setTimer =
-          Timer.periodic(const Duration(seconds: 1), (_) => _addTimeToSet());
+      setTimer = Timer.periodic(const Duration(seconds: 1), (_) => _addTimeToSet());
     });
   }
 
@@ -199,7 +213,9 @@ class _WorkoutScreenState extends State<WorkoutScreen>
                 height: 50,
                 child: TextField(
                   controller: repCountTextFieldController,
-                  onSubmitted: (String value) async {
+                  onChanged: (String value) async {
+                    print(activeSet);
+                    print(value);
                     activeSet!.reps = int.parse(value);
                   },
                   textAlignVertical: TextAlignVertical.center,
@@ -223,7 +239,9 @@ class _WorkoutScreenState extends State<WorkoutScreen>
                 height: 50,
                 child: TextField(
                   controller: repCountTextFieldController,
-                  onSubmitted: (String value) async {
+                  onChanged: (String value) async {
+                    print(activeSet);
+                    print(value);
                     activeSet!.weight = double.parse(value);
                   },
                   textAlignVertical: TextAlignVertical.center,
@@ -256,6 +274,9 @@ class _WorkoutScreenState extends State<WorkoutScreen>
     setState(() {
       globals.exerciseActive = true;
       activeExercise = exercises[index];
+      exerciseTimer?.cancel();
+      exerciseDuration = Duration.zero;
+      setTimer = Timer.periodic(const Duration(seconds: 1), (_) => _addTimeToExercise());
       _beginNextSet();
     });
   }
@@ -291,8 +312,14 @@ class _WorkoutScreenState extends State<WorkoutScreen>
             TextButton(
               child: const Text('Confirm'),
               onPressed: () {
-                exercises.add(ExerciseDTO.fresh(selectedExerciseTemplate!.name,
-                    selectedExerciseTemplate!.id, 60));
+                final exercise = ExerciseDTO.withId(
+                    globals.repository.uuid.v4(),
+                    selectedExerciseTemplate!.name,
+                    selectedExerciseTemplate!.id,
+                    60
+                );
+                exercises.add(exercise);
+                workout.addExercise(exercise);
                 Navigator.of(context).pop();
               },
             ),
@@ -305,19 +332,18 @@ class _WorkoutScreenState extends State<WorkoutScreen>
   @override
   Widget build(BuildContext context) {
     if (globals.exerciseActive && exerciseRestActive) {
-      return _getSetRestScreen();
+      return _getSetRestScreen(context);
     } else if (globals.exerciseActive && exerciseSetActive) {
-      return _getActiveSetScreen();
+      return _getActiveSetScreen(context);
     } else {
-      return _getSummaryScreen();
+      return _getSummaryScreen(context);
     }
   }
 
-  Widget _getSetRestScreen() {
+  Widget _getSetRestScreen(BuildContext context) {
     return Scaffold(
-        body: Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Center(
+        body: Container(
+          alignment: Alignment.topCenter,
         child: Column(
           children: [
             const Text("Rest",
@@ -364,15 +390,13 @@ class _WorkoutScreenState extends State<WorkoutScreen>
             ),
           ],
         ),
-      ),
     ));
   }
 
-  Widget _getActiveSetScreen() {
+  Widget _getActiveSetScreen(BuildContext context) {
     return Scaffold(
-        body: Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Center(
+        body: Container(
+          alignment: Alignment.topCenter,
         child: Column(
           children: [
             Text(activeExercise!.name,
@@ -417,11 +441,10 @@ class _WorkoutScreenState extends State<WorkoutScreen>
             )
           ],
         ),
-      ),
     ));
   }
 
-  Widget _getSummaryScreen() {
+  Widget _getSummaryScreen(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
           title: Column(

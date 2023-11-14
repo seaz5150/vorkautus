@@ -1,9 +1,9 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:vorkautus/dto/ExerciseDTO.dart';
 import 'package:vorkautus/dto/SetDTO.dart';
-import '../globals.dart' as globals;
-import 'package:collection/collection.dart';
+
 import '../utilities/misc_utilities.dart';
 
 class WorkoutExerciseCard extends StatefulWidget {
@@ -22,8 +22,7 @@ class WorkoutExerciseCard extends StatefulWidget {
 }
 
 class _WorkoutExerciseCardState extends State<WorkoutExerciseCard> {
-  List<Map<String, String>> setTableRows = [];
-  List<SetDTO?> sets = [];
+  List<SetDTO> sets = [];
   TextEditingController? _restTextFieldController;
   late ExerciseDTO exercise;
 
@@ -31,17 +30,8 @@ class _WorkoutExerciseCardState extends State<WorkoutExerciseCard> {
   void initState() {
     super.initState();
     exercise = widget.exercises[widget.exerciseIndex];
-    sets =
-        exercise.setIds.map((e) => globals.repository.getSetById(e)).toList();
-    setTableRows = sets
-        .mapIndexed((index, s) => {
-              "Set": "#${index + 1}",
-              "Reps": "${s!.reps}x",
-              "Weight": "${s.weight}kg"
-            })
-        .toList();
-    _restTextFieldController =
-        TextEditingController(text: exercise.pauseTime.toString());
+    sets = exercise.getSets();
+    _restTextFieldController = TextEditingController(text: exercise.pauseTime.toString());
   }
 
   void _onDeleteExercisePressed() {
@@ -63,6 +53,7 @@ class _WorkoutExerciseCardState extends State<WorkoutExerciseCard> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   Expanded(
+                    flex: 3,
                     child: ListTile(
                         title: Text(
                       exercise.name,
@@ -84,117 +75,127 @@ class _WorkoutExerciseCardState extends State<WorkoutExerciseCard> {
               padding: const EdgeInsets.only(bottom: 8.0),
               child: Padding(
                 padding: const EdgeInsets.only(left: 40.0, right: 40.0),
-                child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      if (exercise.completed) ...[
-                        DataTable(
-                          columnSpacing: 30,
-                          dataRowHeight: 25,
-                          headingRowHeight: 25,
-                          columns: const <DataColumn>[
-                            DataColumn(
-                              label: Expanded(
-                                child: Text(
-                                  'Set',
-                                  style: TextStyle(
-                                      fontStyle: FontStyle.italic, fontSize: 13),
-                                ),
-                              ),
+                child: Column(children: [
+                  if (exercise.completed) ...[
+                    DataTable(
+                      columnSpacing: 30,
+                      dataRowMinHeight: 15,
+                      headingRowHeight: 25,
+                      columns: const <DataColumn>[
+                        DataColumn(
+                          label: Expanded(
+                            child: Text(
+                              'Set',
+                              style: TextStyle(
+                                  fontStyle: FontStyle.italic, fontSize: 13),
                             ),
-                            DataColumn(
-                              label: Expanded(
-                                child: Text(
-                                  'Reps',
-                                  style: TextStyle(
-                                      fontStyle: FontStyle.italic, fontSize: 13),
-                                ),
-                              ),
-                            ),
-                            DataColumn(
-                              label: Expanded(
-                                child: Text(
-                                  'Weight',
-                                  style: TextStyle(
-                                      fontStyle: FontStyle.italic, fontSize: 13),
-                                ),
-                              ),
-                            ),
-                          ],
-                          rows: setTableRows
-                              .map(
-                                ((element) => DataRow(
-                                      cells: <DataCell>[
-                                        DataCell(Text(element["Set"]!,
-                                            style:
-                                                const TextStyle(fontSize: 13))),
-                                        DataCell(Text(element["Reps"]!,
-                                            style:
-                                                const TextStyle(fontSize: 13))),
-                                        DataCell(Text(element["Weight"]!,
-                                            style:
-                                                const TextStyle(fontSize: 13))),
-                                      ],
-                                    )),
-                              )
-                              .toList(),
+                          ),
                         ),
-                      ] else ...[
-                        SizedBox(
-                          width: 100,
-                          height: 50,
-                          child: TextField(
-                            controller: _restTextFieldController,
-                            onSubmitted: (String value) async {
-                              exercise.pauseTime = int.parse(value);
-                            },
-                            textAlignVertical: TextAlignVertical.center,
-                            decoration: const InputDecoration(
-                                labelText: "Rest time (s)",
-                                prefixIcon: Icon(Icons.timer, size: 22),
-                                labelStyle: TextStyle(fontSize: 13)),
-                            keyboardType: TextInputType.number,
-                            inputFormatters: <TextInputFormatter>[
-                              FilteringTextInputFormatter.digitsOnly
+                        DataColumn(
+                          label: Expanded(
+                            child: Text(
+                              'Reps',
+                              style: TextStyle(
+                                  fontStyle: FontStyle.italic, fontSize: 13),
+                            ),
+                          ),
+                        ),
+                        DataColumn(
+                          label: Expanded(
+                            child: Text(
+                              'Weight',
+                              style: TextStyle(
+                                  fontStyle: FontStyle.italic, fontSize: 13),
+                            ),
+                          ),
+                        ),
+                        DataColumn(
+                          label: Expanded(
+                            child: Text(
+                              'Time',
+                              style: TextStyle(
+                                  fontStyle: FontStyle.italic, fontSize: 13),
+                            ),
+                          ),
+                        ),
+                      ],
+                      rows: exercise
+                          .getSets()
+                          .mapIndexed((index, set) => DataRow(cells: [
+                                DataCell(Text("#${index + 1}",
+                                    textAlign: TextAlign.center,
+                                    style: const TextStyle(fontSize: 13))),
+                                DataCell(Text("${set.reps}x",
+                                    textAlign: TextAlign.center,
+                                    style: const TextStyle(fontSize: 13))),
+                                DataCell(Text("${set.weight}kg",
+                                    textAlign: TextAlign.center,
+                                    style: const TextStyle(fontSize: 13))),
+                                DataCell(Text(
+                                    getFormattedTime(
+                                        Duration(seconds: set.timeOfSet)),
+                                    textAlign: TextAlign.center,
+                                    style: const TextStyle(fontSize: 13))),
+                              ]))
+                          .toList(),
+                    ),
+                  ] else ...[
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 8.0),
+                      child: TextField(
+                          controller: _restTextFieldController,
+                          onSubmitted: (String value) async {
+                            exercise.pauseTime = int.parse(value);
+                          },
+                          textAlignVertical: TextAlignVertical.center,
+                          decoration: const InputDecoration(
+                              labelText: "Rest time (s)",
+                              prefixIcon: Icon(Icons.timer, size: 22),
+                              labelStyle: TextStyle(fontSize: 13)),
+                          keyboardType: TextInputType.number,
+                          inputFormatters: <TextInputFormatter>[
+                            FilteringTextInputFormatter.digitsOnly
+                          ],
+                        ),
+                    ),
+                  ],
+                  if (exercise.completed) ...[
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                            "Total time: ${getFormattedTime(Duration(seconds: exercise.totalTime!))}",
+                            style: const TextStyle(fontSize: 13)),
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            disabledBackgroundColor:
+                                const Color.fromARGB(170, 102, 147, 58),
+                          ),
+                          onPressed: null,
+                          child: const Row(
+                            children: [
+                              Icon(
+                                Icons.check,
+                                color: Colors.white,
+                                size: 20,
+                              ),
+                              Padding(
+                                padding: EdgeInsets.only(left: 8.0),
+                                child: Text('DONE',
+                                    style: TextStyle(color: Colors.white)),
+                              ),
                             ],
                           ),
                         ),
                       ],
-                      if (exercise.completed) ...[
-                        Column(
-                          children: [
-                            Text(
-                          "Total time: ${getFormattedTime(Duration(seconds: exercise.totalTime!))}",
-                          style: const TextStyle(fontSize: 13)),
-                            ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                disabledBackgroundColor:
-                                    const Color.fromARGB(170, 102, 147, 58),
-                              ),
-                              onPressed: null,
-                              child: const Row(
-                                children: [
-                                  Icon(
-                                    Icons.check,
-                                    color: Colors.white,
-                                    size: 20,
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsets.only(left: 8.0),
-                                    child: Text('DONE',
-                                        style: TextStyle(color: Colors.white)),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ] else ...[
+                    ),
+                  ] else ...[
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
                         ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                            backgroundColor:
-                                const Color.fromARGB(255, 79, 55, 139),
+                            backgroundColor: const Color.fromARGB(255, 79, 55, 139),
                           ),
                           onPressed: _onStartExercisePressed,
                           child: const Row(
@@ -213,7 +214,9 @@ class _WorkoutExerciseCardState extends State<WorkoutExerciseCard> {
                           ),
                         ),
                       ],
-                    ]),
+                    ),
+                  ],
+                ]),
               ),
             )
           ],

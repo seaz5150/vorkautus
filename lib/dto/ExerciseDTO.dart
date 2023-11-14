@@ -20,7 +20,7 @@ class ExerciseDTO {
   ExerciseTemplateDTO? _exerciseTemplate;
 
   ExerciseDTO.empty();
-
+  ExerciseDTO.withId(this.id, this.name, this.exerciseTemplateId, this.pauseTime);
   ExerciseDTO.fresh(this.name, this.exerciseTemplateId, this.pauseTime);
 
   ExerciseDTO(this.id, this.name, this.exerciseTemplateId, this.totalTime,
