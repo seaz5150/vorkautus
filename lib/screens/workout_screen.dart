@@ -427,13 +427,30 @@ class _WorkoutScreenState extends State<WorkoutScreen>
 
   Widget _getActiveSetScreen(BuildContext context) {
     return Scaffold(
+        appBar: AppBar(
+      title: Column(
+        children: [
+          Text(activeExercise!.name,
+              style:
+              const TextStyle(fontWeight: FontWeight.w500, fontSize: 35))
+        ],
+      ),
+    ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+        floatingActionButton: Container(
+          padding: const EdgeInsets.only(left: 32, right: 32),
+          width: double.infinity,
+          height: 30,
+          child: FloatingActionButton(
+            backgroundColor: const Color.fromARGB(255, 102, 147, 58),
+            onPressed: _onNewExercisePressed,
+            child: const Icon(Icons.add, color: Colors.white),
+          ),
+        ),
         body: Container(
           alignment: Alignment.topCenter,
         child: Column(
           children: [
-            Text(activeExercise!.name,
-                style:
-                    const TextStyle(fontWeight: FontWeight.w500, fontSize: 35)),
             Text("Set #${activeExerciseSets.indexOf(activeSet!) + 1}",
                 style: const TextStyle(
                     fontWeight: FontWeight.w500,

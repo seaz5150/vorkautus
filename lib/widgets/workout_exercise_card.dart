@@ -144,7 +144,7 @@ class _WorkoutExerciseCardState extends State<WorkoutExerciseCard> {
                       padding: const EdgeInsets.only(bottom: 8.0),
                       child: TextField(
                           controller: _restTextFieldController,
-                          onSubmitted: (String value) async {
+                          onChanged: (String value) async {
                             exercise.pauseTime = int.parse(value);
                           },
                           textAlignVertical: TextAlignVertical.center,
