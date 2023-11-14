@@ -22,33 +22,42 @@ class _QuizSubviewState extends State<QuizSubview> {
   Widget build(BuildContext context) {
     return Center(
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.only(top: 8.0),
         child: Card(
           elevation: 4.0,
           child: Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.all(12.0),
             child: Column(
               mainAxisSize: MainAxisSize.max,
               children: [
                 // Question Text Field
                 Text(
                   currentQuestion?.question ?? "",
-                  style: TextStyle(fontSize: 30.0),
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 17.0),
                 ),
                 SizedBox(height: 16.0),
                 // Answer Buttons
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: shuffledAnswers.map((option) {
-                    return Expanded(
-                        child: Padding(
-                            padding: const EdgeInsets.all(16.0),
-                            child: AnswerButton(
-                              option: option,
-                              onPressed: () => _onAnswerSelected(option),
-                              color: _getColor(option),
-                            )));
-                  }).toList(),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 2.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: shuffledAnswers.map((option) {
+                        return Padding(
+                            padding: const EdgeInsets.only(bottom: 12),
+                            child: SizedBox(
+                              width: double.infinity,
+                              child: AnswerButton(
+                                option: option,
+                                onPressed: () => _onAnswerSelected(option),
+                                color: _getColor(option),
+                              ),
+                            ));
+                      }).toList(),
+                    ),
+                  ),
                 ),
               ],
             ),
@@ -94,7 +103,7 @@ class _QuizSubviewState extends State<QuizSubview> {
           ? Colors.green
           : Colors.red;
     }
-    return Colors.blue; // Default color when not answered
+    return const Color.fromARGB(255, 79, 55, 139); // Default color when not answered
   }
 
   @override
@@ -120,7 +129,7 @@ class AnswerButton extends StatelessWidget {
       style: ElevatedButton.styleFrom(backgroundColor: color),
       child: Text(
         option,
-        style: TextStyle(fontSize: 30, color: Colors.white),
+        style: TextStyle(fontSize: 17, color: Colors.white, fontWeight: FontWeight.normal),
       ),
     );
   }

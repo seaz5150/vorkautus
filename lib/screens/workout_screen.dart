@@ -329,7 +329,7 @@ class _WorkoutScreenState extends State<WorkoutScreen>
                     fontSize: 25,
                     color: Color.fromARGB(198, 52, 52, 52))),
             const Padding(
-              padding: EdgeInsets.only(top: 40.0),
+              padding: EdgeInsets.only(top: 20.0),
               child: Text("Remaining time",
                   style: TextStyle(
                       fontWeight: FontWeight.w500,
@@ -345,7 +345,7 @@ class _WorkoutScreenState extends State<WorkoutScreen>
                     fontSize: 50,
                     color: Color.fromARGB(255, 102, 147, 58))),
             Padding(
-              padding: const EdgeInsets.only(top: 40.0),
+              padding: const EdgeInsets.only(top: 20.0, bottom: 20.0),
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color.fromARGB(255, 102, 147, 58),
