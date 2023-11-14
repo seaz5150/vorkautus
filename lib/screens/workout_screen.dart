@@ -41,6 +41,7 @@ class _WorkoutScreenState extends State<WorkoutScreen>
   Timer? setRestTimer;
   Duration setRestDuration = Duration.zero;
   Duration exerciseRestDuration = Duration.zero;
+  TextEditingController? workoutNameTextFieldController;
   TextEditingController? repCountTextFieldController;
   TextEditingController? weightTextFieldController;
 
@@ -170,7 +171,38 @@ class _WorkoutScreenState extends State<WorkoutScreen>
     });
   }
 
-  void _onEditWorkoutNamePressed() {}
+  Future<void> _onEditWorkoutNamePressed() async {
+    workoutNameTextFieldController ??= TextEditingController();
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        workoutNameTextFieldController?.text = workout.name;
+        return AlertDialog(
+          title: const Text('Workout name'),
+          content: TextField(
+                  controller: workoutNameTextFieldController,
+                  onChanged: (String value) async {
+                    workout.name = value;
+                  },
+                  textAlignVertical: TextAlignVertical.center,
+                  decoration: const InputDecoration(
+                      labelText: "Workout name",
+                      labelStyle: TextStyle(fontSize: 13)),
+                  keyboardType: TextInputType.text,
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('CONFIRM'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   void _onRestAndAddSetAndWeightEntered() {
     setState(() {
