@@ -63,6 +63,7 @@ class _WorkoutScreenState extends State<WorkoutScreen>
         _finishWorkout();
         break;
       case ObserverState.WORKOUT_CANCELED:
+        workoutTimer?.cancel();
         // Have to delete the saved exercises...
         break;
       default:
@@ -78,9 +79,6 @@ class _WorkoutScreenState extends State<WorkoutScreen>
         Timer.periodic(const Duration(seconds: 1), (_) => _addTimeToWorkout());
     availableExerciseTemplates =
         globals.repository.getExerciseTemplatesFromJson();
-    // Pass the workout to globals in case it needs to be saved.
-    globals.activeWorkout = workout;
-    globals.activeWorkoutExercises = exercises;
     selectedExerciseTemplate = availableExerciseTemplates.first;
   }
 
@@ -89,6 +87,8 @@ class _WorkoutScreenState extends State<WorkoutScreen>
     super.dispose();
     workoutTimer?.cancel();
     setTimer?.cancel();
+    exerciseTimer?.cancel();
+    setRestTimer?.cancel();
   }
 
   void _finishWorkout() {
@@ -248,8 +248,6 @@ class _WorkoutScreenState extends State<WorkoutScreen>
                 child: TextField(
                   controller: repCountTextFieldController,
                   onChanged: (String value) async {
-                    print(activeSet);
-                    print(value);
                     activeSet!.reps = int.parse(value);
                   },
                   textAlignVertical: TextAlignVertical.center,
@@ -274,8 +272,6 @@ class _WorkoutScreenState extends State<WorkoutScreen>
                 child: TextField(
                   controller: repCountTextFieldController,
                   onChanged: (String value) async {
-                    print(activeSet);
-                    print(value);
                     activeSet!.weight = double.parse(value);
                   },
                   textAlignVertical: TextAlignVertical.center,
@@ -376,66 +372,72 @@ class _WorkoutScreenState extends State<WorkoutScreen>
 
   Widget _getSetRestScreen(BuildContext context) {
     return Scaffold(
+        appBar: AppBar(
+          title: Container(
+            alignment: Alignment.center,
+            child: const Text("Rest",
+                style: TextStyle(fontWeight: FontWeight.w500, fontSize: 35)),
+          ),
+        ),
         body: Container(
-      alignment: Alignment.topCenter,
-      child: Column(
-        children: [
-          const Text("Rest",
-              style: TextStyle(fontWeight: FontWeight.w500, fontSize: 35)),
-          Text(
-              "${activeExercise!.name}, set #${activeExerciseSets.indexOf(activeSet!) + 1}",
-              style: const TextStyle(
-                  fontWeight: FontWeight.w500,
-                  fontSize: 25,
-                  color: Color.fromARGB(198, 52, 52, 52))),
-          const Padding(
-            padding: EdgeInsets.only(top: 20.0),
-            child: Text("Remaining time",
-                style: TextStyle(
-                    fontWeight: FontWeight.w500,
-                    fontSize: 20,
-                    color: Color.fromARGB(198, 52, 52, 52))),
-          ),
-          Text(
-              getFormattedTime(Duration(
-                  seconds: max(0,
-                      activeExercise!.pauseTime - setRestDuration.inSeconds))),
-              style: const TextStyle(
-                  fontWeight: FontWeight.w500,
-                  fontSize: 50,
-                  color: Color.fromARGB(255, 102, 147, 58))),
-          Padding(
-            padding: const EdgeInsets.only(top: 20.0, bottom: 20.0),
-            child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color.fromARGB(255, 102, 147, 58),
+          alignment: Alignment.topCenter,
+          child: Column(
+            children: [
+              Text(
+                  "${activeExercise!.name}, set #${activeExerciseSets.indexOf(activeSet!) + 1}",
+                  style: const TextStyle(
+                      fontWeight: FontWeight.w500,
+                      fontSize: 25,
+                      color: Color.fromARGB(198, 52, 52, 52))),
+              const Padding(
+                padding: EdgeInsets.only(top: 20.0),
+                child: Text("Remaining time",
+                    style: TextStyle(
+                        fontWeight: FontWeight.w500,
+                        fontSize: 20,
+                        color: Color.fromARGB(198, 52, 52, 52))),
               ),
-              onPressed: () => _beginNextSet(),
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                    'BEGIN SET #${activeExerciseSets.indexOf(activeSet!) + 2}',
-                    style: const TextStyle(color: Colors.white)),
+              Text(
+                  getFormattedTime(Duration(
+                      seconds: max(
+                          0,
+                          activeExercise!.pauseTime -
+                              setRestDuration.inSeconds))),
+                  style: const TextStyle(
+                      fontWeight: FontWeight.w500,
+                      fontSize: 50,
+                      color: Color.fromARGB(255, 102, 147, 58))),
+              Padding(
+                padding: const EdgeInsets.only(top: 20.0, bottom: 20.0),
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color.fromARGB(255, 102, 147, 58),
+                  ),
+                  onPressed: () => _beginNextSet(),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                        'BEGIN SET #${activeExerciseSets.indexOf(activeSet!) + 2}',
+                        style: const TextStyle(color: Colors.white)),
+                  ),
+                ),
               ),
-            ),
+              Expanded(
+                child: _getQuizScreen(),
+              ),
+            ],
           ),
-          Expanded(
-            child: _getQuizScreen(),
-          ),
-        ],
-      ),
-    ));
+        ));
   }
 
   Widget _getActiveSetScreen(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Column(
-            children: [
-              Text(activeExercise!.name,
-                  style: const TextStyle(
-                      fontWeight: FontWeight.w500, fontSize: 35))
-            ],
+          title: Container(
+            alignment: Alignment.center,
+            child: Text(activeExercise!.name,
+                style:
+                    const TextStyle(fontWeight: FontWeight.w500, fontSize: 35)),
           ),
         ),
         body: Container(

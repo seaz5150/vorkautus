@@ -31,7 +31,8 @@ class _WorkoutExerciseCardState extends State<WorkoutExerciseCard> {
     super.initState();
     exercise = widget.exercises[widget.exerciseIndex];
     sets = exercise.getSets();
-    _restTextFieldController = TextEditingController(text: exercise.pauseTime.toString());
+    _restTextFieldController =
+        TextEditingController(text: exercise.pauseTime.toString());
   }
 
   void _onDeleteExercisePressed() {
@@ -143,20 +144,20 @@ class _WorkoutExerciseCardState extends State<WorkoutExerciseCard> {
                     Padding(
                       padding: const EdgeInsets.only(bottom: 8.0),
                       child: TextField(
-                          controller: _restTextFieldController,
-                          onChanged: (String value) async {
-                            exercise.pauseTime = int.parse(value);
-                          },
-                          textAlignVertical: TextAlignVertical.center,
-                          decoration: const InputDecoration(
-                              labelText: "Rest time (s)",
-                              prefixIcon: Icon(Icons.timer, size: 22),
-                              labelStyle: TextStyle(fontSize: 13)),
-                          keyboardType: TextInputType.number,
-                          inputFormatters: <TextInputFormatter>[
-                            FilteringTextInputFormatter.digitsOnly
-                          ],
-                        ),
+                        controller: _restTextFieldController,
+                        onChanged: (String value) async {
+                          exercise.pauseTime = int.parse(value);
+                        },
+                        textAlignVertical: TextAlignVertical.center,
+                        decoration: const InputDecoration(
+                            labelText: "Rest time (s)",
+                            prefixIcon: Icon(Icons.timer, size: 22),
+                            labelStyle: TextStyle(fontSize: 13)),
+                        keyboardType: TextInputType.number,
+                        inputFormatters: <TextInputFormatter>[
+                          FilteringTextInputFormatter.digitsOnly
+                        ],
+                      ),
                     ),
                   ],
                   if (exercise.completed) ...[
@@ -195,7 +196,8 @@ class _WorkoutExerciseCardState extends State<WorkoutExerciseCard> {
                       children: [
                         ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color.fromARGB(255, 79, 55, 139),
+                            backgroundColor:
+                                const Color.fromARGB(255, 79, 55, 139),
                           ),
                           onPressed: _onStartExercisePressed,
                           child: const Row(
