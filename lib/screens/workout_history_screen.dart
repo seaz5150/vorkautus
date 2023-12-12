@@ -111,8 +111,8 @@ class _WorkoutHistoryScreenState extends State<WorkoutHistoryScreen> {
   void _onWorkoutRepeatPressed(WorkoutDTO workout) {
     setState(() {
       globals.copyWorkout = workout;
-      widget.onDestinationSelected(1);
     });
+    widget.onDestinationSelected(1);
   }
 
   // Asynchronously load the workouts
