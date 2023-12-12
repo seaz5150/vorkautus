@@ -75,6 +75,19 @@ class _WorkoutScreenState extends State<WorkoutScreen>
   void initState() {
     super.initState();
     globals.stateProvider.subscribe(this);
+
+    // Maybe copy a workout from history
+    if (globals.copyWorkout != null) {
+      workout.name = globals.copyWorkout?.name ?? "New workout";
+      for (ExerciseDTO exercise in globals.copyWorkout?.getExercises() ?? []) {
+        ExerciseDTO newExercise = ExerciseDTO.fresh(exercise.name, exercise.exerciseTemplateId, exercise.pauseTime);
+        newExercise.id = globals.repository.uuid.v4();
+        workout.addExercise(newExercise);
+      }
+      exercises = workout.getExercises();
+      globals.copyWorkout = null;
+    }
+
     workoutTimer =
         Timer.periodic(const Duration(seconds: 1), (_) => _addTimeToWorkout());
     availableExerciseTemplates =
@@ -384,50 +397,48 @@ class _WorkoutScreenState extends State<WorkoutScreen>
           child: Column(
             children: [
               Text(
-                  "${activeExercise!.name}, set #${activeExerciseSets.indexOf(activeSet!) + 1}",
-                  style: const TextStyle(
-                      fontWeight: FontWeight.w500,
-                      fontSize: 25,
-                      color: Color.fromARGB(198, 52, 52, 52))),
-              const Padding(
-                padding: EdgeInsets.only(top: 20.0),
-                child: Text("Remaining time",
-                    style: TextStyle(
-                        fontWeight: FontWeight.w500,
-                        fontSize: 20,
-                        color: Color.fromARGB(198, 52, 52, 52))),
-              ),
-              Text(
-                  getFormattedTime(Duration(
-                      seconds: max(
-                          0,
-                          activeExercise!.pauseTime -
-                              setRestDuration.inSeconds))),
-                  style: const TextStyle(
-                      fontWeight: FontWeight.w500,
-                      fontSize: 50,
-                      color: Color.fromARGB(255, 102, 147, 58))),
-              Padding(
-                padding: const EdgeInsets.only(top: 20.0, bottom: 20.0),
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color.fromARGB(255, 102, 147, 58),
-                  ),
-                  onPressed: () => _beginNextSet(),
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                        'BEGIN SET #${activeExerciseSets.indexOf(activeSet!) + 2}',
-                        style: const TextStyle(color: Colors.white)),
-                  ),
-                ),
-              ),
-              Expanded(
-                child: _getQuizScreen(),
-              ),
-            ],
+              "${activeExercise!.name}, set #${activeExerciseSets.indexOf(activeSet!) + 1}",
+              style: const TextStyle(
+                  fontWeight: FontWeight.w500,
+                  fontSize: 25,
+                  color: Color.fromARGB(198, 52, 52, 52))),
+          const Padding(
+            padding: EdgeInsets.only(top: 20.0),
+            child: Text("Remaining time",
+                style: TextStyle(
+                    fontWeight: FontWeight.w500,
+                    fontSize: 20,
+                    color: Color.fromARGB(198, 52, 52, 52))),
           ),
-        ));
+          Text(
+              getFormattedTime(Duration(
+                  seconds: max(0,
+                      activeExercise!.pauseTime - setRestDuration.inSeconds))),
+              style: const TextStyle(
+                  fontWeight: FontWeight.w500,
+                  fontSize: 50,
+                  color: Color.fromARGB(255, 102, 147, 58))),
+          Padding(
+            padding: const EdgeInsets.only(top: 20.0, bottom: 20.0),
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color.fromARGB(255, 102, 147, 58),
+              ),
+              onPressed: () => _beginNextSet(),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                    'BEGIN SET #${activeExerciseSets.indexOf(activeSet!) + 2}',
+                    style: const TextStyle(color: Colors.white)),
+              ),
+            ),
+          ),
+          Expanded(
+            child: _getQuizScreen(),
+          ),
+        ],
+      ),
+    ));
   }
 
   Widget _getActiveSetScreen(BuildContext context) {

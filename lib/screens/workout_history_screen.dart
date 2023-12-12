@@ -7,7 +7,8 @@ import 'package:vorkautus/widgets/workout_exercise_summary.dart';
 import '../globals.dart' as globals;
 
 class WorkoutHistoryScreen extends StatefulWidget {
-  const WorkoutHistoryScreen({super.key});
+  final void Function(int index) onDestinationSelected;
+  WorkoutHistoryScreen({super.key, required this.onDestinationSelected});
 
   @override
   State<WorkoutHistoryScreen> createState() => _WorkoutHistoryScreenState();
@@ -108,7 +109,10 @@ class _WorkoutHistoryScreenState extends State<WorkoutHistoryScreen> {
   }
 
   void _onWorkoutRepeatPressed(WorkoutDTO workout) {
-    // TODO: Copy and start workout
+    setState(() {
+      globals.copyWorkout = workout;
+      widget.onDestinationSelected(1);
+    });
   }
 
   // Asynchronously load the workouts

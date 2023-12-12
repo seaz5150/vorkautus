@@ -118,7 +118,7 @@ class _RootScreenState extends State<RootScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: <Widget>[
-        const WorkoutHistoryScreen(),
+        WorkoutHistoryScreen(onDestinationSelected: _onDestinationSelected),
         const WorkoutScreen(),
         const ExercisesScreen(),
       ][_selectedPageIndex],
